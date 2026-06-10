@@ -334,20 +334,20 @@ html.no-js .splash { display: none; }
   /* el “blur” va horneado en el gradiente: cero filter, cero repaints */
 }
 .blob-1 {
-  width: 75vw; height: 75vw;
-  max-width: 900px; max-height: 900px;
+  width: 62vw; height: 62vw;
+  max-width: 720px; max-height: 720px;
   top: 2%; left: -8%;
   background: radial-gradient(circle at 50% 50%, rgba(75, 59, 240, 0.30) 0%, rgba(75, 59, 240, 0.16) 35%, rgba(75, 59, 240, 0.0) 68%);
 }
 .blob-2 {
-  width: 65vw; height: 65vw;
-  max-width: 780px; max-height: 780px;
+  width: 54vw; height: 54vw;
+  max-width: 640px; max-height: 640px;
   top: 28%; right: -12%;
   background: radial-gradient(circle at 50% 50%, rgba(155, 48, 217, 0.22) 0%, rgba(155, 48, 217, 0.10) 38%, rgba(155, 48, 217, 0.0) 70%);
 }
 .blob-3 {
-  width: 55vw; height: 55vw;
-  max-width: 640px; max-height: 640px;
+  width: 46vw; height: 46vw;
+  max-width: 540px; max-height: 540px;
   bottom: -6%; left: 22%;
   background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.20) 0%, rgba(139, 92, 246, 0.09) 40%, rgba(139, 92, 246, 0.0) 70%);
 }

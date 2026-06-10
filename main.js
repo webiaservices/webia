@@ -35,7 +35,10 @@
     if (splashHidden) return;
     splashHidden = true;
     var splash = $("[data-splash]");
-    if (splash) splash.classList.add("is-out");
+    if (splash) {
+      splash.classList.add("is-out");
+      setTimeout(function () { splash.style.display = "none"; }, 900); // libera una capa de GPU de pantalla completa
+    }
     onSplashOut.forEach(function (fn) { safe(fn, "splashOut"); });
   }
   function initSplash() {
@@ -128,13 +131,23 @@
         my = (e.clientY / window.innerHeight - 0.5) * 2;
       }, { passive: true });
     }
+    var heroVisible = true;
+    if ("IntersectionObserver" in window) {
+      var hero = $(".hero");
+      if (hero) new IntersectionObserver(function (en) {
+        heroVisible = en[0].isIntersecting;
+      }, { threshold: 0 }).observe(hero);
+    }
     addUpdater(function () {
+      if (!heroVisible) return; // no gastes frames si el hero no se ve
       for (var i = 0; i < state.length; i++) {
         var s = state[i];
         var tx = mx * 120 * s.f * 10;
         var ty = my * 90 * s.f * 10;
-        s.x += (tx - s.x) * 0.045;
-        s.y += (ty - s.y) * 0.045;
+        var dx = tx - s.x, dy = ty - s.y;
+        if (dx * dx + dy * dy < 0.02) continue; // ya convergió: no re-escribas estilo
+        s.x += dx * 0.045;
+        s.y += dy * 0.045;
         s.el.style.transform = "translate3d(" + s.x.toFixed(1) + "px," + s.y.toFixed(1) + "px,0)";
       }
     });
@@ -164,8 +177,10 @@
     document.addEventListener("mouseup", function () { cursor.classList.remove("is-down"); });
 
     addUpdater(function () {
-      rx += (x - rx) * 0.16;
-      ry += (y - ry) * 0.16;
+      var dx = x - rx, dy = y - ry;
+      if (dx * dx + dy * dy < 0.04) return; // anillo ya pegado al puntero
+      rx += dx * 0.16;
+      ry += dy * 0.16;
       ring.style.transform = "translate3d(" + rx.toFixed(1) + "px," + ry.toFixed(1) + "px,0)";
     });
 
