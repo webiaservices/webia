@@ -633,7 +633,7 @@
       var n = waNumber();
       var url = waConfigured(n)
         ? "https://wa.me/" + n + "?text=" + encodeURIComponent(msg) // llega a tu WhatsApp
-        : "mailto:" + (data.email || "hola@webia.mx") +
+        : "mailto:" + (data.email || "webiaservices@gmail.com") +
           "?subject=" + encodeURIComponent("Quiero mi página con Webia") +
           "&body=" + encodeURIComponent(msg);
       window.open(url, "_blank");
@@ -645,7 +645,7 @@
       emailBtn.addEventListener("click", function () {
         if (!form.reportValidity()) return;
         sendToEmail();
-        location.href = "mailto:" + (data.email || "hola@webia.mx") +
+        location.href = "mailto:" + (data.email || "webiaservices@gmail.com") +
           "?subject=" + encodeURIComponent("Quiero mi página con Webia") +
           "&body=" + encodeURIComponent(composeMessage());
         if (ok) ok.hidden = false;

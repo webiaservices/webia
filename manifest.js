@@ -11,9 +11,9 @@
   window.__BRAND__ = {
     name: "Webia",
 
-    whatsapp: "5216145948513",   // 👈 tomado de perronescuu.com — cámbialo si no es tu número
+    whatsapp: "5213318942096",   // WhatsApp de Webia
 
-    email: "hola@webia.mx",      // 👈 CAMBIA ESTO por el mail real de Webia
+    email: "webiaservices@gmail.com",      // correo donde llegan los formularios
 
     instagram: "https://instagram.com/webia.s"
   };
