@@ -302,10 +302,12 @@
      ---------------------------------------------------------- */
   function initHeroParallax() {
     if (reduced || !window.gsap || !window.ScrollTrigger) return;
+    // Solo movimiento (sin opacidad: un scrub de alpha atorado dejaba
+    // la portada "gris" al subir rápido)
     gsap.to("[data-hero-inner]", {
-      y: -70, autoAlpha: 0.3,
+      y: -50,
       ease: "none",
-      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.6 }
+      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.6, invalidateOnRefresh: true }
     });
   }
 
