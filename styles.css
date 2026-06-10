@@ -584,7 +584,7 @@ section { padding: var(--section-pad) var(--gutter); }
   padding: 1.1rem 1.2rem 1.3rem;
   display: grid; gap: .8rem;
   align-content: start;
-  aspect-ratio: 16 / 10;
+  min-height: 230px;
 }
 .mock-dark { background: #16131D; }
 .mock-light { background: #FBFAF7; }
@@ -598,7 +598,7 @@ section { padding: var(--section-pad) var(--gutter); }
 }
 /* cuando el screenshot ya cargó, el mock toma la forma exacta de la imagen
    (sin recortes raros) y el fallback se oculta */
-.mock-screen.has-shot { padding: 0; aspect-ratio: auto; }
+.mock-screen.has-shot { padding: 0; min-height: 0; }
 .mock-screen.has-shot > :not(.mock-shot) { display: none; }
 .mock-screen.has-shot .mock-shot {
   position: static;
