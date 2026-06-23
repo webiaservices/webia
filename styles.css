@@ -986,3 +986,34 @@ html.no-js .reveal { opacity: 1; transform: none; }
   .bd-1, .bd-2, .bd-3 { animation: none; }
   .hero-spark { animation: none; opacity: .6; }
 }
+
+/* === Showcase / Estudio (sección nueva con imágenes) === */
+.showcase { background: var(--bg); }
+.showcase-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.12fr;
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: center;
+}
+.showcase-text h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.08;
+  margin: .55rem 0 1.1rem; letter-spacing: -.02em;
+}
+.showcase-text > p {
+  color: var(--ink-soft); max-width: 44ch; margin-bottom: 1.7rem;
+  font-size: 1.05rem; line-height: 1.65;
+}
+.showcase-media { position: relative; }
+.showcase-photo {
+  width: 100%; display: block; border-radius: 22px;
+  box-shadow: 0 34px 80px rgba(23, 20, 31, .20);
+}
+.showcase-accent {
+  position: absolute; width: 44%; right: -3%; bottom: -9%;
+  border-radius: 16px; border: 7px solid var(--bg);
+  box-shadow: 0 24px 55px rgba(75, 59, 240, .28);
+}
+@media (max-width: 860px) {
+  .showcase-inner { grid-template-columns: 1fr; gap: 2.4rem; }
+  .showcase-accent { width: 42%; right: 2%; bottom: -10%; }
+}
