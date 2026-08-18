@@ -1017,3 +1017,250 @@ html.no-js .reveal { opacity: 1; transform: none; }
   .showcase-inner { grid-template-columns: 1fr; gap: 2.4rem; }
   .showcase-accent { width: 42%; right: 2%; bottom: -10%; }
 }
+
+
+/* =============================================================
+   13. Servicios — 4 tarjetas
+   ============================================================= */
+@media (min-width: 720px)  { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1120px) { .services-grid { grid-template-columns: repeat(4, 1fr); } }
+.service-hot {
+  border-color: rgba(75, 59, 240, .32);
+  background: linear-gradient(168deg, #FFFFFF 0%, #F4F1FF 100%);
+}
+.service-hot .service-num { color: var(--violet); }
+
+/* =============================================================
+   14. Utilidades sobre fondo oscuro
+   ============================================================= */
+.kicker-light { color: #A99BFF; }
+.grad-text-light {
+  font-style: normal;
+  background: linear-gradient(100deg, #8F83FF 10%, #C77DFF 90%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.btn-light { background: var(--bg); color: var(--ink); box-shadow: 0 10px 28px -12px rgba(0,0,0,.55); }
+.btn-light:hover { background: #fff; }
+
+/* =============================================================
+   15. Sistemas
+   ============================================================= */
+.systems {
+  position: relative;
+  background: var(--ink);
+  color: var(--bg);
+  overflow: clip;
+}
+.systems-glow {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 55% at 12% 8%, rgba(75, 59, 240, .38), transparent 70%),
+    radial-gradient(50% 45% at 88% 92%, rgba(155, 48, 217, .30), transparent 72%);
+}
+.systems-inner {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  display: grid; gap: 2.8rem;
+}
+.systems h2 {
+  font-size: clamp(2rem, 4.4vw, 3.1rem);
+  font-weight: 700;
+  margin: .8rem 0 1.2rem;
+}
+.systems-lead { color: rgba(242, 239, 233, .72); max-width: 46ch; }
+.systems-list { margin: 1.7rem 0 2.2rem; display: grid; gap: .75rem; }
+.systems-list li {
+  position: relative; padding-left: 1.7rem;
+  color: rgba(242, 239, 233, .86); font-size: .98rem;
+}
+.systems-list li::before { content: "✦"; position: absolute; left: 0; color: #A99BFF; }
+
+.systems-case {
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: var(--radius);
+  padding: clamp(1.7rem, 3.5vw, 2.5rem);
+}
+.case-label {
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .14em; text-transform: uppercase; color: #A99BFF;
+}
+.case-title {
+  font-family: var(--disp);
+  font-size: clamp(1.12rem, 2vw, 1.45rem);
+  font-weight: 500; line-height: 1.45;
+  margin: .9rem 0 1.9rem;
+  color: rgba(242, 239, 233, .92);
+}
+.case-title strong { color: #fff; font-weight: 700; }
+.case-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 1rem; }
+.case-metric b {
+  display: block;
+  font-family: var(--disp);
+  font-size: clamp(1.55rem, 3.2vw, 2.2rem);
+  font-weight: 700; letter-spacing: -.03em; color: #fff;
+}
+.case-metric span {
+  display: block; margin-top: .3rem;
+  font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: rgba(242, 239, 233, .58); line-height: 1.45;
+}
+.case-metric-hero b {
+  background: linear-gradient(100deg, #8F83FF, #C77DFF);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.case-foot {
+  margin-top: 1.9rem; padding-top: 1.3rem;
+  border-top: 1px solid rgba(255, 255, 255, .13);
+  font-family: var(--disp); font-weight: 500;
+  color: rgba(242, 239, 233, .9);
+}
+@media (min-width: 960px) {
+  .systems-inner { grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+}
+
+/* =============================================================
+   16. Etiqueta Web / Sistema en proyectos
+   ============================================================= */
+.work-type {
+  display: inline-block; vertical-align: middle;
+  margin-left: .7rem; transform: translateY(-.18em);
+  font-family: var(--mono); font-size: .68rem; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: .38em .85em; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--ink-mute);
+  transition: border-color .25s, color .25s, background-color .25s;
+}
+.work-type-sys {
+  border-color: rgba(75, 59, 240, .4);
+  color: var(--indigo);
+  background: rgba(75, 59, 240, .08);
+}
+.work-head:hover .work-type { border-color: rgba(75, 59, 240, .45); color: var(--indigo); }
+
+/* =============================================================
+   17. Mock de panel (proyectos de sistema)
+   ============================================================= */
+.mock-app {
+  background: #12101A;
+  grid-template-columns: 40px 1fr;
+  gap: .7rem;
+  padding: .85rem;
+}
+.mock-app-alt { background: #16101C; }
+.app-side { display: grid; gap: .45rem; align-content: start; }
+.app-logo {
+  width: 22px; height: 22px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--indigo), var(--violet));
+  margin-bottom: .35rem;
+}
+.app-side u { height: 6px; border-radius: 3px; background: rgba(255,255,255,.1); text-decoration: none; }
+.app-side u.on { background: rgba(139, 92, 246, .8); }
+.app-main { display: grid; gap: .6rem; align-content: start; }
+.app-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+.app-kpis b {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px; padding: .5rem .55rem;
+  display: grid; gap: .32rem;
+}
+.app-kpis s { display: block; height: 5px; width: 62%; border-radius: 3px; background: rgba(255,255,255,.2); text-decoration: none; }
+.app-kpis em { display: block; height: 10px; width: 85%; border-radius: 3px; background: rgba(139, 92, 246, .75); }
+.app-chart {
+  display: flex; align-items: flex-end; gap: .35rem;
+  height: 66px; padding: .5rem .55rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 8px;
+}
+.app-chart i { flex: 1; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, rgba(139,92,246,.95), rgba(75,59,240,.35)); }
+.app-rows { display: grid; gap: .35rem; }
+.app-rows u { height: 9px; border-radius: 4px; background: rgba(255,255,255,.07); text-decoration: none; }
+.app-rows u.warn { background: rgba(251, 191, 36, .45); }
+.app-rows u.ok   { background: rgba(52, 211, 153, .45); }
+
+/* colores extra de mocks */
+.mk-teal { background: #0E7C7B; }
+.mk-teal-bg { background: #0E7C7B; }
+.mk-teal-soft { background: rgba(14, 124, 123, .45); }
+.mk-card-teal { background: linear-gradient(160deg, rgba(14,124,123,.28), rgba(23,20,31,.07)); border: 1px solid rgba(23,20,31,.08); }
+.mk-gold { background: #C49A5B; }
+.mk-gold-soft { background: rgba(196, 154, 91, .5); }
+.mk-dark-l { background: rgba(23, 20, 31, .78); }
+.mk-wa { background: #25D366; }
+.mk-ghost { background: transparent; border: 1.5px solid rgba(23, 20, 31, .2); }
+
+/* =============================================================
+   18. Testimonios en carrusel infinito
+   ============================================================= */
+.testi-marquee {
+  overflow: clip;
+  margin-inline: calc(var(--gutter) * -1);
+  padding-block: .5rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.testi-track {
+  display: flex;
+  width: max-content;
+  padding-left: var(--gutter);
+  animation: testiScroll 64s linear infinite;
+  will-change: transform;
+}
+@keyframes testiScroll { to { transform: translate3d(-50%, 0, 0); } }
+.testi-marquee:hover .testi-track,
+.testi-marquee:focus-within .testi-track { animation-play-state: paused; }
+.testi-track .testi {
+  width: min(84vw, 400px);
+  flex: 0 0 auto;
+  margin-right: 1.5rem;
+  display: flex; flex-direction: column;
+  transition: transform .4s var(--ease-out), box-shadow .4s var(--ease-out), border-color .3s;
+}
+.testi-track .testi:hover { transform: translateY(-6px); }
+.testi-track blockquote { flex: 1; }
+.testi-hint {
+  text-align: center; margin-top: 1.5rem;
+  font-family: var(--mono); font-size: .72rem; color: var(--ink-mute);
+}
+@media (prefers-reduced-motion: reduce) {
+  .testi-track { animation: none; }
+  .testi-marquee { overflow-x: auto; }
+}
+
+/* =============================================================
+   19. Bloque de sistemas en precios
+   ============================================================= */
+.price-systems {
+  max-width: 1200px; margin: 1.5rem auto 0;
+  position: relative; overflow: clip;
+  background: var(--ink); color: var(--bg);
+  border-radius: var(--radius);
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  display: grid; gap: 1.8rem; align-items: center;
+  box-shadow: 0 26px 56px -30px rgba(23, 20, 31, .55);
+  transform-style: preserve-3d;
+}
+.price-systems::before {
+  content: ""; position: absolute;
+  width: 420px; height: 420px; top: -210px; right: -130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 92, 246, .4), transparent 65%);
+  pointer-events: none;
+}
+.ps-text, .ps-cta { position: relative; z-index: 1; }
+.ps-text h3 { font-size: clamp(1.35rem, 2.6vw, 1.85rem); font-weight: 700; margin: .7rem 0 .8rem; }
+.ps-text p { color: rgba(242, 239, 233, .72); max-width: 52ch; font-size: .98rem; }
+.ps-cta { display: grid; gap: 1rem; justify-items: start; }
+.ps-amount {
+  font-family: var(--disp);
+  font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+  font-weight: 700; letter-spacing: -.02em;
+}
+@media (min-width: 960px) {
+  .price-systems { grid-template-columns: 1.45fr .75fr; }
+  .ps-cta { justify-items: end; text-align: right; }
+}

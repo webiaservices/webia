@@ -489,10 +489,10 @@
           if (!start) start = t;
           var p = Math.min((t - start) / dur, 1);
           var eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.round(to * eased);
+          el.textContent = Math.round(to * eased).toLocaleString("es-MX");
           if (p < 1) requestAnimationFrame(step);
         }
-        if (reduced) el.textContent = Math.round(to);
+        if (reduced) el.textContent = Math.round(to).toLocaleString("es-MX");
         else requestAnimationFrame(step);
       });
     }, { threshold: 0.01 });
@@ -520,7 +520,7 @@
      ---------------------------------------------------------- */
   function initStaggerGrids() {
     if (!window.gsap || !window.ScrollTrigger || reduced) return;
-    [".services-grid", ".testi-grid", ".price-grid", ".process-steps"].forEach(function (sel) {
+    [".services-grid", ".price-grid", ".process-steps"].forEach(function (sel) {
       var grid = $(sel);
       if (!grid) return;
       var items = Array.prototype.slice.call(grid.children);
