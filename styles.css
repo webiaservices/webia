@@ -1264,3 +1264,10 @@ html.no-js .reveal { opacity: 1; transform: none; }
   .price-systems { grid-template-columns: 1.45fr .75fr; }
   .ps-cta { justify-items: end; text-align: right; }
 }
+
+/* logo de cliente en testimonios */
+.testi-logo {
+  height: 30px; width: auto; max-width: 132px;
+  object-fit: contain; object-position: left;
+  margin-bottom: .55rem; opacity: .92;
+}
