@@ -31,42 +31,28 @@
     var title = $(".hv-title");
     if (!title) return;
     var words = $$(".w", title);
-    if (!words.length) return;
-    if (reduce) { words.forEach(function (w) { w.style.opacity = 1; }); return; }
+    if (!words.length || reduce) return;
+
+    var root = document.documentElement;
+    var EASE = "cubic-bezier(.22,1,.36,1)";
 
     words.forEach(function (w, i) {
-      w.style.opacity = "0";
-      w.style.transform = "translate3d(0,0.42em,0) rotate(1.4deg)";
       w.style.transition =
-        "opacity .72s cubic-bezier(.22,1,.36,1) " + (0.18 + i * 0.055) + "s," +
-        "transform .92s cubic-bezier(.22,1,.36,1) " + (0.18 + i * 0.055) + "s";
+        "opacity .72s " + EASE + " " + (0.16 + i * 0.055) + "s," +
+        "transform .95s " + EASE + " " + (0.16 + i * 0.055) + "s";
     });
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        words.forEach(function (w) {
-          w.style.opacity = "1";
-          w.style.transform = "translate3d(0,0,0) rotate(0deg)";
-        });
-      });
+    $$("[data-hv-up]").forEach(function (el, i) {
+      el.style.transition =
+        "opacity .8s " + EASE + " " + (0.52 + i * 0.1) + "s," +
+        "transform .8s " + EASE + " " + (0.52 + i * 0.1) + "s";
     });
 
-    var rest = $$("[data-hv-up]");
-    rest.forEach(function (el, i) {
-      if (reduce) return;
-      el.style.opacity = "0";
-      el.style.transform = "translate3d(0,18px,0)";
-      el.style.transition =
-        "opacity .8s cubic-bezier(.22,1,.36,1) " + (0.55 + i * 0.1) + "s," +
-        "transform .8s cubic-bezier(.22,1,.36,1) " + (0.55 + i * 0.1) + "s";
-    });
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        rest.forEach(function (el) {
-          el.style.opacity = "1";
-          el.style.transform = "translate3d(0,0,0)";
-        });
-      });
-    });
+    root.classList.add("js-hv");
+    // setTimeout (no rAF): sigue corriendo aunque la pestaña esté en segundo plano,
+    // así el texto nunca se queda invisible.
+    setTimeout(function () { root.classList.add("hv-in"); }, 70);
+    // cinturón y tirantes
+    setTimeout(function () { root.classList.add("hv-in"); }, 1200);
   }
 
   /* ---------- 3. HERO: escena con scroll (pin) ------------- */

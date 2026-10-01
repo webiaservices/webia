@@ -37,11 +37,23 @@
     radial-gradient(100% 70% at 12% 0%,  rgba(75,59,240,.13) 0%, rgba(75,59,240,0) 60%),
     linear-gradient(180deg,#FBFAF7 0%, #F4F1EC 52%, #EFEBE4 100%);
   overflow:clip;
+  padding:0 !important; margin:0 !important; width:100%; max-width:none !important;
 }
-.hv-pin{ height:100svh; position:relative; display:grid; place-items:center; overflow:clip; }
+.hv-pin{
+  height:100svh; position:relative; display:grid; place-items:center; overflow:clip;
+  padding:0 !important; margin:0 !important; width:100%; max-width:none !important;
+}
 .hv-stage{
   position:absolute; inset:0; display:grid; place-items:start center;
+  padding:0 !important; margin:0 !important;
 }
+
+/* estado de entrada — sólo si JS está vivo (la clase la pone find.js) */
+.hv-title .w,[data-hv-up]{ opacity:1; }
+.js-hv .hv-title .w{ opacity:0; transform:translate3d(0,.42em,0) rotate(1.4deg); }
+.js-hv [data-hv-up]{ opacity:0; transform:translate3d(0,18px,0); }
+.js-hv.hv-in .hv-title .w,
+.js-hv.hv-in [data-hv-up]{ opacity:1; transform:none; }
 
 /* --- copy --- */
 .hv-copy{
