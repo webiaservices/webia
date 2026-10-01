@@ -93,6 +93,38 @@
     hero.addEventListener("mouseleave", function () { ry(0); px(0); py(0); });
   }
 
+  /* ---------- 4a. HERO en celular: el producto empieza justo debajo del texto */
+  function initHeroLayout() {
+    var stage = $(".hv-stage");
+    var copy = $("[data-hv-copy]");
+    var visual = $("[data-hv-visual]");
+    if (!stage || !copy || !visual) return;
+    var lastW = 0;
+    function place() {
+      if (window.innerWidth >= 1024) { visual.style.removeProperty("--hv-top"); return; }
+      var top = copy.getBoundingClientRect().bottom - stage.getBoundingClientRect().top + 14;
+      visual.style.setProperty("--hv-top", Math.round(top) + "px");
+    }
+    place();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+    window.addEventListener("load", place);
+    window.addEventListener("resize", function () {
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth; place();
+    });
+  }
+
+  /* ---------- 4c. TRABAJO: el nombre "vuela" a la página del caso */
+  function initWorkLinks() {
+    $$('#trabajo a.work-head[href^="/proyectos"]').forEach(function (a) {
+      a.addEventListener("click", function () {
+        $$(".work-name").forEach(function (n) { n.style.viewTransitionName = ""; });
+        var n = a.querySelector(".work-name");
+        if (n) n.style.viewTransitionName = "pj-title";
+      });
+    });
+  }
+
   /* ---------- 4b. HERO: el dashboard cobra vida ------------ */
   function initUI() {
     var scene = $("[data-ui]");
@@ -179,11 +211,12 @@
       }
     });
 
+    var desk = window.matchMedia("(min-width: 1024px)").matches;
     tl.to(hint, { opacity: 0, duration: 0.05 }, 0)
       .to(copy, { yPercent: -22, opacity: 0, ease: "power2.in", duration: 0.3 }, 0)
-      .to(visual, { yPercent: -6, duration: 0.5 }, 0);
-    if (win)   tl.fromTo(win, { rotationX: 14 }, { rotationX: 0, duration: 0.34 }, 0);
-    if (phone) tl.to(phone, { yPercent: -12, duration: 0.42 }, 0);
+      .to(visual, { yPercent: desk ? -4 : -6, duration: 0.5 }, 0);
+    if (win && desk) tl.fromTo(win, { rotationX: 6 }, { rotationX: 0, duration: 0.34 }, 0);
+    if (phone) tl.to(phone, { yPercent: desk ? -8 : -6, duration: 0.42 }, 0);
 
     tl.fromTo(curtain, { clipPath: "inset(100% 0% 0% 0%)" },
                        { clipPath: "inset(0% 0% 0% 0%)", ease: "power2.inOut", duration: 0.3 }, 0.18)
@@ -361,8 +394,10 @@
     safe(initLenis,       "initLenis");
     safe(initNavStuck,    "initNavStuck");
     safe(initHeroWords,   "initHeroWords");
+    safe(initHeroLayout,  "initHeroLayout");
     safe(initHeroMouse,   "initHeroMouse");
     safe(initUI,          "initUI");
+    safe(initWorkLinks,   "initWorkLinks");
     safe(initFitWords,    "initFitWords");
     safe(initHeroScene,   "initHeroScene");
     safe(initSvcRows,     "initSvcRows");
