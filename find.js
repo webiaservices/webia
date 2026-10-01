@@ -73,21 +73,66 @@
     setTimeout(function () { root.classList.add("hv-in"); }, 1200);
   }
 
-  /* ---------- 4. HERO: la imagen sigue al mouse ------------ */
+  /* ---------- 4. HERO: el producto reacciona al mouse ------ */
   function initHeroMouse() {
     if (reduce || !finePointer || !window.gsap) return;
-    var img = $("[data-hv-visual] img");
+    var win = $("[data-ui-win]");
+    var phone = $("[data-ui-phone]");
     var hero = $(".hero-v2");
-    if (!img || !hero) return;
-    var gx = window.gsap.quickTo(img, "x", { duration: 1.1, ease: "power3.out" });
-    var gy = window.gsap.quickTo(img, "y", { duration: 1.1, ease: "power3.out" });
+    if (!win || !phone || !hero) return;
+    var ry = window.gsap.quickTo(win, "rotationY", { duration: 1.2, ease: "power3.out" });
+    var px = window.gsap.quickTo(phone, "x", { duration: 1.1, ease: "power3.out" });
+    var py = window.gsap.quickTo(phone, "y", { duration: 1.1, ease: "power3.out" });
     hero.addEventListener("mousemove", function (e) {
       var nx = e.clientX / window.innerWidth - 0.5;
       var ny = e.clientY / window.innerHeight - 0.5;
-      gx(nx * -22);
-      gy(ny * -12);
+      ry(nx * 4);
+      px(nx * -18);
+      py(ny * -12);
     });
-    hero.addEventListener("mouseleave", function () { gx(0); gy(0); });
+    hero.addEventListener("mouseleave", function () { ry(0); px(0); py(0); });
+  }
+
+  /* ---------- 4b. HERO: el dashboard cobra vida ------------ */
+  function initUI() {
+    var scene = $("[data-ui]");
+    if (!scene || reduce) return;
+    scene.classList.add("ui-js");
+    var started = false;
+    function start() {
+      if (started) return;
+      started = true;
+      scene.classList.add("ui-on");
+
+      // números que cuentan
+      $$("[data-ui-count]", scene).forEach(function (el) {
+        var to = parseFloat(el.getAttribute("data-ui-count"));
+        var dec = parseInt(el.getAttribute("data-ui-dec") || "0", 10);
+        var pre = el.getAttribute("data-ui-pre") || "";
+        var dur = 1700, t0 = 0;
+        function fmt(v) { return pre + (dec ? v.toFixed(dec) : Math.round(v).toLocaleString("es-MX")); }
+        function step(ts) {
+          if (!t0) t0 = ts;
+          var p = Math.min(1, (ts - t0) / dur);
+          el.textContent = fmt(to * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(step);
+        }
+        el.textContent = fmt(0);
+        requestAnimationFrame(step);
+        setTimeout(function () { el.textContent = fmt(to); }, dur + 500);   // por si rAF se pausa
+      });
+
+      // el chat: los mensajes llegan uno por uno
+      var msgs = $$(".ui-msg", scene);
+      var typing = $(".ui-typing", scene);
+      var at = [500, 1500, 2900, 3900];
+      msgs.forEach(function (m, i) {
+        setTimeout(function () { m.classList.add("show"); }, at[i] || (i * 1000 + 500));
+      });
+      if (typing) setTimeout(function () { typing.classList.add("show"); }, (at[msgs.length - 1] || 4000) + 900);
+    }
+    // arranca cuando termina la entrada del título
+    setTimeout(start, 950);
   }
 
   /* ---------- 5. HERO → TELÓN DE MARCA (pin + scrub) ------- */
@@ -104,10 +149,10 @@
     var hint    = $(".hv-scroll");
     var copy    = $("[data-hv-copy]");
     var visual  = $("[data-hv-visual]");
-    var under   = $("[data-hv-under]");
+    var win     = $("[data-ui-win]");
+    var phone   = $("[data-ui-phone]");
     var curtain = $("[data-hv-curtain]");
     var edgeIn  = $("[data-hv-edge-in]");
-    var edgeOut = $("[data-hv-edge-out]");
     var brand   = $(".hv-brand");
     var fill    = $("[data-hv-fill]");
     var letters = $$(".hv-knock .hv-l > span");
@@ -120,60 +165,71 @@
     function setLive(v) { if (v !== isLive) { isLive = v; curtain.classList.toggle("is-live", v); } }
     function setDark(v) { if (v !== isDark) { isDark = v; if (nav) nav.classList.toggle("nav--dark", v); } }
 
+    // 1) escena fijada: producto → telón → "webia"
     var tl = gsap.timeline({
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: pin,
         start: "top top",
-        end: "+=230%",
+        end: "+=170%",
         pin: true,
         scrub: window.__lenis ? 0.45 : 0.7,
         anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: function (self) {
-          var p = self.progress;
-          setLive(p > 0.1 && p < 0.997);
-          setDark(p > 0.33 && p < 0.97);
-        },
-        onLeave: function () { setLive(false); setDark(false); },
-        onLeaveBack: function () { setLive(false); setDark(false); }
+        invalidateOnRefresh: true
       }
     });
 
     tl.to(hint, { opacity: 0, duration: 0.05 }, 0)
-      .to(copy, { yPercent: -22, opacity: 0, ease: "power2.in", duration: 0.26 }, 0)
-      .to(visual, { scale: 1.2, yPercent: -4, duration: 0.42 }, 0)
+      .to(copy, { yPercent: -22, opacity: 0, ease: "power2.in", duration: 0.3 }, 0)
+      .to(visual, { yPercent: -6, duration: 0.5 }, 0);
+    if (win)   tl.fromTo(win, { rotationX: 14 }, { rotationX: 0, duration: 0.34 }, 0);
+    if (phone) tl.to(phone, { yPercent: -12, duration: 0.42 }, 0);
 
-      // el telón sube
-      .fromTo(curtain, { clipPath: "inset(100% 0% 0% 0%)" },
-                       { clipPath: "inset(0% 0% 0% 0%)", ease: "power2.inOut", duration: 0.26 }, 0.14)
-      .fromTo(edgeIn, { yPercent: 100 }, { yPercent: 0, ease: "power2.inOut", duration: 0.26 }, 0.14)
-      .fromTo(edgeIn, { opacity: 0 }, { opacity: 1, duration: 0.03 }, 0.14)
-      .to(edgeIn, { opacity: 0, duration: 0.04 }, 0.37)
-
-      // detrás del telón: limpiar para la salida
-      .set(visual, { opacity: 0 }, 0.41)
-      .set(under, { opacity: 1 }, 0.41)
-
-      // el relleno vive todo el tiempo
-      .fromTo(fill, { scale: 1.24, xPercent: -5 }, { scale: 1, xPercent: 5, duration: 0.86 }, 0.14)
-
-      // letras suben una por una
+    tl.fromTo(curtain, { clipPath: "inset(100% 0% 0% 0%)" },
+                       { clipPath: "inset(0% 0% 0% 0%)", ease: "power2.inOut", duration: 0.3 }, 0.18)
+      .fromTo(edgeIn, { yPercent: 100 }, { yPercent: 0, ease: "power2.inOut", duration: 0.3 }, 0.18)
+      .fromTo(edgeIn, { opacity: 0 }, { opacity: 1, duration: 0.03 }, 0.18)
+      .to(edgeIn, { opacity: 0, duration: 0.05 }, 0.45)
+      .set(visual, { opacity: 0 }, 0.5)
+      .fromTo(fill, { scale: 1.24, xPercent: -5 }, { scale: 1, xPercent: 5, duration: 0.82 }, 0.18)
       .fromTo(letters, { yPercent: 118 },
-                       { yPercent: 0, ease: "power3.out", duration: 0.17, stagger: 0.032 }, 0.25)
+                       { yPercent: 0, ease: "power3.out", duration: 0.2, stagger: 0.04 }, 0.32)
       .fromTo(spark, { scale: 0, rotation: -140, opacity: 0, transformOrigin: "50% 50%" },
-                     { scale: 1, rotation: 0, opacity: 1, ease: "back.out(2.2)", duration: 0.12 }, 0.44)
+                     { scale: 1, rotation: 0, opacity: 1, ease: "back.out(2.2)", duration: 0.14 }, 0.56)
       .fromTo(tags, { opacity: 0, y: 14 },
-                    { opacity: 1, y: 0, ease: "power2.out", duration: 0.1, stagger: 0.025 }, 0.47)
-      .fromTo(brand, { scale: 1 }, { scale: 1.04, duration: 0.3 }, 0.55)
+                    { opacity: 1, y: 0, ease: "power2.out", duration: 0.12, stagger: 0.03 }, 0.6)
+      .fromTo(brand, { scale: 1 }, { scale: 1.03, duration: 0.25 }, 0.75);
 
-      // salida: el telón se va hacia arriba
-      .fromTo(curtain, { clipPath: "inset(0% 0% 0% 0%)" },
-                       { clipPath: "inset(0% 0% 100% 0%)", ease: "power2.inOut", duration: 0.15, immediateRender: false }, 0.85)
-      .to(brand, { yPercent: -16, ease: "power2.in", duration: 0.15 }, 0.85)
-      .fromTo(edgeOut, { yPercent: 100 }, { yPercent: 0, ease: "power2.inOut", duration: 0.15 }, 0.85)
-      .fromTo(edgeOut, { opacity: 0 }, { opacity: 1, duration: 0.02 }, 0.85)
-      .to(edgeOut, { opacity: 0, duration: 0.02 }, 0.98);
+    var st = tl.scrollTrigger;
+
+    // 2) sin hueco: al soltarse, el bloque oscuro sube como una sección más
+    //    y el contenido entra directo. La palabra se queda un poquito atrás (profundidad).
+    gsap.fromTo(brand, { y: 0, opacity: 1 }, {
+      y: function () { return window.innerHeight * 0.3; },
+      opacity: 0.25,
+      ease: "none",
+      scrollTrigger: {
+        start: function () { return st.end; },
+        end: function () { return st.end + window.innerHeight; },
+        scrub: true,
+        invalidateOnRefresh: true
+      }
+    });
+
+    // 3) nav oscuro y animación del relleno mientras el bloque oscuro esté en pantalla
+    window.ScrollTrigger.create({
+      start: function () { return st.start; },
+      end: function () { return st.end + window.innerHeight - 72; },
+      invalidateOnRefresh: true,
+      onUpdate: function (self) {
+        var y = self.scroll() - st.start;
+        var D = st.end - st.start;
+        setLive(y > D * 0.12);
+        setDark(y > D * 0.4);
+      },
+      onLeave: function () { setLive(false); setDark(false); },
+      onLeaveBack: function () { setLive(false); setDark(false); }
+    });
   }
 
   /* ---------- 6. SERVICIOS: palabra que se rellena --------- */
@@ -306,6 +362,7 @@
     safe(initNavStuck,    "initNavStuck");
     safe(initHeroWords,   "initHeroWords");
     safe(initHeroMouse,   "initHeroMouse");
+    safe(initUI,          "initUI");
     safe(initFitWords,    "initFitWords");
     safe(initHeroScene,   "initHeroScene");
     safe(initSvcRows,     "initSvcRows");
