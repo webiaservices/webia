@@ -116,6 +116,13 @@
   .hv-copy{ padding-top:clamp(74px,9vh,100px); }
 }
 
+/* --- telón oscuro para que el wordmark resalte --- */
+.hv-dim{
+  position:absolute; inset:0; z-index:3; pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 62%, #141021 0%, #09070F 100%);
+  opacity:0; will-change:opacity;
+}
+
 /* --- wordmark recortado sobre la imagen --- */
 .hv-mark{
   position:absolute; inset:0; z-index:4; display:grid; place-items:center;
@@ -127,7 +134,8 @@
   background-image:var(--mark-img);
   background-size:cover; background-position:center 62%;
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  -webkit-text-stroke:1.2px rgba(23,20,31,.16);
+  -webkit-text-stroke:1px rgba(242,239,233,.2);
+  filter:saturate(1.15) contrast(1.08);
 }
 .hv-fade{
   position:absolute; inset:0; z-index:5; pointer-events:none;

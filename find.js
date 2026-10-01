@@ -68,6 +68,7 @@
     var copy   = $("[data-hv-copy]");
     var visual = $("[data-hv-visual]");
     var mark   = $("[data-hv-mark]");
+    var dim    = $("[data-hv-dim]");
     var fade   = $("[data-hv-fade]");
     var hint   = $(".hv-scroll");
     if (!copy || !visual || !mark) return;
@@ -87,11 +88,13 @@
     tl.to(hint,   { opacity: 0, duration: 0.06 }, 0)
       .to(copy,   { yPercent: -16, scale: 0.9, opacity: 0, ease: "power2.in", duration: 0.34 }, 0)
       .to(visual, { scale: 3.05, yPercent: -16, ease: "none", duration: 0.78 }, 0)
+      .to(dim,    { opacity: 0.88, ease: "power1.inOut", duration: 0.3 }, 0.2)
       .fromTo(mark,
               { opacity: 0, scale: 0.68 },
               { opacity: 1, scale: 1.06, ease: "none", duration: 0.52 }, 0.26)
       .to(mark,   { scale: 1.34, ease: "none", duration: 0.2 }, 0.78)
-      .to(fade,   { opacity: 1, ease: "power1.in", duration: 0.16 }, 0.84);
+      .to(fade,   { opacity: 1, ease: "power1.in", duration: 0.17 }, 0.83)
+      .to(dim,    { opacity: 0, ease: "power1.in", duration: 0.17 }, 0.83);
   }
 
   /* ---------- 4. SERVICIOS: palabra que se rellena --------- */
