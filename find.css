@@ -127,7 +127,7 @@ html.lenis{ scroll-behavior:auto !important; }
 }
 
 .hv-scroll{
-  position:absolute; left:50%; bottom:1.5rem; translate:-50% 0; z-index:3;
+  position:absolute; left:var(--gutter,5vw); bottom:1.6rem; z-index:3;
   margin:0; font-family:var(--mono,monospace); font-size:.6rem; letter-spacing:.24em;
   text-transform:uppercase; color:var(--ink); opacity:.55;
 }
@@ -185,9 +185,6 @@ html.lenis{ scroll-behavior:auto !important; }
 .hv-l{ display:inline-block; overflow:hidden; padding:.15em .02em .07em; margin:-.15em -.02em -.07em; }
 .hv-l > span{ display:inline-block; will-change:transform; }
 .hv-word-ghost{ visibility:hidden; }
-@media (max-width:760px){
-  .hv-word,.hv-spark{ font-size:29vw; }
-}
 
 /* destello ✦ del logo */
 .hv-spark{
@@ -217,6 +214,14 @@ html.lenis{ scroll-behavior:auto !important; }
   content:""; position:absolute; left:0; right:0; top:-1px; height:2px;
   background:linear-gradient(90deg,transparent 0%,#4B3BF0 18%,#C4B5FD 50%,#9B30D9 82%,transparent 100%);
   box-shadow:0 0 16px 2px rgba(155,48,217,.6), 0 0 70px 10px rgba(75,59,240,.32);
+}
+
+/* telón en celular */
+@media (max-width:760px){
+  .hv-brand .hv-word, .hv-brand .hv-spark{ font-size:29vw; }
+  .hv-brand .hv-tag{ font-size:.6rem; letter-spacing:.14em; }
+  .hv-brand .hv-tag span + span::before{ margin:0 .55em; }
+  .hero-v2 .hv-scroll{ display:none; }
 }
 
 /* ---------- 4. LOGOS DE CLIENTES A COLOR ----------------- */
@@ -297,9 +302,10 @@ html.lenis{ scroll-behavior:auto !important; }
 .svc-big .base{ opacity:.17; }
 /* en escritorio la imagen sale flotando junto al cursor; en móvil va en línea */
 .svc-shot{ display:none; }
-.svc-row[data-preview]{ cursor:default; }
+.svc-row > *, .svc-intro > *{ min-width:0; }
+.svc-v2, .showcase{ overflow-x:clip; }
 @media (max-width:860px){
-  .svc-intro,.svc-row{ grid-template-columns:1fr; }
+  .svc-intro,.svc-row{ grid-template-columns:minmax(0,1fr); }
   .svc-big{ font-size:clamp(3rem,16vw,6rem); margin-top:1.2rem; }
   .svc-shot{
     display:block; margin-top:1.3rem; width:min(260px,100%); aspect-ratio:4/3;
@@ -345,6 +351,10 @@ html.lenis{ scroll-behavior:auto !important; }
 .sc-stack:hover .sc-c3{ transform:translate(5%,6%) rotate(9.5deg); }
 @media (max-width:860px){
   .sc-stack{ min-height:0; margin-top:1.5rem; }
+  .sc-card{ width:70%; }
+  .sc-c1{ left:0;   transform:rotate(-4deg); }
+  .sc-c2{ left:14%; transform:rotate(1deg); }
+  .sc-c3{ left:28%; transform:rotate(4deg); }
 }
 
 /* ---------- 6. PREVIEW FLOTANTE EN PROYECTOS ------------- */
