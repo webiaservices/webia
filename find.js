@@ -1,0 +1,158 @@
+/* ============================================================
+   WEBIA — capa "FIND". Se carga DESPUÉS de main.js.
+   Sin módulos, sin dependencias nuevas. Todo guardado en try.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var $  = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function safe(fn, name) {
+    try { fn(); } catch (e) { console.warn("[" + name + "]", e); }
+  }
+
+  /* ---------- 1. NAV: fondo sólido al bajar ---------------- */
+  function initNavStuck() {
+    var nav = $(".nav");
+    if (!nav) return;
+    var on = false;
+    function check() {
+      var want = window.scrollY > 48;
+      if (want !== on) { on = want; nav.classList.toggle("is-stuck", on); }
+    }
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+  }
+
+  /* ---------- 2. HERO: palabras que entran ----------------- */
+  function initHeroWords() {
+    var title = $(".hv-title");
+    if (!title) return;
+    var words = $$(".w", title);
+    if (!words.length) return;
+    if (reduce) { words.forEach(function (w) { w.style.opacity = 1; }); return; }
+
+    words.forEach(function (w, i) {
+      w.style.opacity = "0";
+      w.style.transform = "translate3d(0,0.42em,0) rotate(1.4deg)";
+      w.style.transition =
+        "opacity .72s cubic-bezier(.22,1,.36,1) " + (0.18 + i * 0.055) + "s," +
+        "transform .92s cubic-bezier(.22,1,.36,1) " + (0.18 + i * 0.055) + "s";
+    });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        words.forEach(function (w) {
+          w.style.opacity = "1";
+          w.style.transform = "translate3d(0,0,0) rotate(0deg)";
+        });
+      });
+    });
+
+    var rest = $$("[data-hv-up]");
+    rest.forEach(function (el, i) {
+      if (reduce) return;
+      el.style.opacity = "0";
+      el.style.transform = "translate3d(0,18px,0)";
+      el.style.transition =
+        "opacity .8s cubic-bezier(.22,1,.36,1) " + (0.55 + i * 0.1) + "s," +
+        "transform .8s cubic-bezier(.22,1,.36,1) " + (0.55 + i * 0.1) + "s";
+    });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        rest.forEach(function (el) {
+          el.style.opacity = "1";
+          el.style.transform = "translate3d(0,0,0)";
+        });
+      });
+    });
+  }
+
+  /* ---------- 3. HERO: escena con scroll (pin) ------------- */
+  function initHeroScene() {
+    var pin = $(".hv-pin");
+    if (!pin || reduce) return;
+    if (!window.gsap || !window.ScrollTrigger) return;
+    if (window.innerWidth < 760) return;          // en móvil se queda estático
+
+    var gsap = window.gsap;
+    gsap.registerPlugin(window.ScrollTrigger);
+
+    var copy   = $("[data-hv-copy]");
+    var visual = $("[data-hv-visual]");
+    var mark   = $("[data-hv-mark]");
+    var fade   = $("[data-hv-fade]");
+    var hint   = $(".hv-scroll");
+    if (!copy || !visual || !mark) return;
+
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pin,
+        start: "top top",
+        end: "+=260%",
+        pin: true,
+        scrub: 0.6,
+        anticipatePin: 1,
+        invalidateOnRefresh: true
+      }
+    });
+
+    tl.to(hint,   { opacity: 0, duration: 0.06 }, 0)
+      .to(copy,   { yPercent: -16, scale: 0.9, opacity: 0, ease: "power2.in", duration: 0.34 }, 0)
+      .to(visual, { scale: 3.05, yPercent: -16, ease: "none", duration: 0.78 }, 0)
+      .fromTo(mark,
+              { opacity: 0, scale: 0.68 },
+              { opacity: 1, scale: 1.06, ease: "none", duration: 0.52 }, 0.26)
+      .to(mark,   { scale: 1.34, ease: "none", duration: 0.2 }, 0.78)
+      .to(fade,   { opacity: 1, ease: "power1.in", duration: 0.16 }, 0.84);
+  }
+
+  /* ---------- 4. SERVICIOS: palabra que se rellena --------- */
+  function initSvcRows() {
+    var rows = $$(".svc-row");
+    if (!rows.length) return;
+    if (!("IntersectionObserver" in window) || reduce) {
+      rows.forEach(function (r) { r.classList.add("is-in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          en.target.classList.add("is-in");
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.32, rootMargin: "0px 0px -8% 0px" });
+    rows.forEach(function (r) { io.observe(r); });
+  }
+
+  /* ---------- 5. Refrescar ScrollTrigger al cargar fotos --- */
+  function initRefresh() {
+    if (!window.ScrollTrigger) return;
+    window.addEventListener("load", function () {
+      window.ScrollTrigger.refresh();
+    });
+    $$("img").forEach(function (im) {
+      if (!im.complete) {
+        im.addEventListener("load", function () {
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        }, { once: true });
+      }
+    });
+  }
+
+  function boot() {
+    safe(initNavStuck,  "initNavStuck");
+    safe(initHeroWords, "initHeroWords");
+    safe(initHeroScene, "initHeroScene");
+    safe(initSvcRows,   "initSvcRows");
+    safe(initRefresh,   "initRefresh");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();

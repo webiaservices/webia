@@ -1,0 +1,227 @@
+/* ============================================================
+   WEBIA — capa "FIND": hero cinemático, servicios editoriales,
+   nav legible y logos a color. Se carga DESPUÉS de styles.css.
+   ============================================================ */
+
+/* ---------- 1. NAV LEGIBLE ------------------------------- */
+.nav{
+  transition:background .4s var(--ease-out,cubic-bezier(.22,1,.36,1)),
+             backdrop-filter .4s ease, box-shadow .4s ease;
+}
+.nav .nav-links a,
+.nav .nav-name,
+.nav .snd-toggle{ color:var(--ink); opacity:.78; }
+.nav .nav-links a{ font-weight:560; }
+.nav .nav-links a:hover{ opacity:1; }
+.nav .nav-name{ opacity:1; font-weight:600; }
+.nav.is-stuck{
+  background:rgba(251,250,247,.82);
+  backdrop-filter:saturate(1.3) blur(14px);
+  -webkit-backdrop-filter:saturate(1.3) blur(14px);
+  box-shadow:0 1px 0 rgba(23,20,31,.07);
+}
+/* subrayado que crece */
+.nav .nav-links a{ position:relative; }
+.nav .nav-links a::after{
+  content:""; position:absolute; left:0; right:0; bottom:-5px; height:1.5px;
+  background:currentColor; transform:scaleX(0); transform-origin:right;
+  transition:transform .42s cubic-bezier(.22,1,.36,1);
+}
+.nav .nav-links a:hover::after{ transform:scaleX(1); transform-origin:left; }
+
+/* ---------- 2. HERO v2 ----------------------------------- */
+.hero-v2{
+  position:relative;
+  background:
+    radial-gradient(120% 80% at 50% 108%, rgba(155,48,217,.16) 0%, rgba(155,48,217,0) 58%),
+    radial-gradient(100% 70% at 12% 0%,  rgba(75,59,240,.13) 0%, rgba(75,59,240,0) 60%),
+    linear-gradient(180deg,#FBFAF7 0%, #F4F1EC 52%, #EFEBE4 100%);
+  overflow:clip;
+}
+.hv-pin{ height:100svh; position:relative; display:grid; place-items:center; overflow:clip; }
+.hv-stage{
+  position:absolute; inset:0; display:grid; place-items:start center;
+}
+
+/* --- copy --- */
+.hv-copy{
+  position:relative; z-index:3; text-align:center;
+  width:min(1180px, 92vw); padding-top:clamp(104px,15.5vh,196px);
+  will-change:transform,opacity;
+}
+.hv-eyebrow{
+  font-family:var(--mono,ui-monospace,monospace);
+  font-size:clamp(.62rem,.74vw,.73rem); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ink-mute,#6b6577); margin:0 0 clamp(1rem,2.4vh,1.8rem);
+}
+.hv-title{
+  margin:0; color:var(--ink);
+  font-size:clamp(2.9rem, 8.4vw, 8.2rem);
+  line-height:.92; letter-spacing:-.045em; font-weight:760;
+  text-wrap:balance;
+}
+.hv-title .w{ display:inline-block; will-change:transform,opacity; }
+.hv-title .gr{
+  background:linear-gradient(96deg,var(--indigo) 0%, var(--violet) 62%, var(--lilac) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hv-sub{
+  margin:clamp(1.1rem,2.6vh,2rem) auto 0; max-width:62ch;
+  font-size:clamp(1rem,1.3vw,1.28rem); line-height:1.45;
+}
+.hv-sub b{ color:var(--ink); font-weight:620; }
+.hv-sub span{ color:var(--ink-mute,#6b6577); font-weight:420; }
+.hv-cta{
+  margin-top:clamp(1.4rem,3.2vh,2.4rem);
+  display:flex; gap:.7rem; justify-content:center; flex-wrap:wrap;
+}
+.hv-pill,.hv-ghost{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.92rem 1.6rem; border-radius:999px; font-weight:600;
+  font-size:.96rem; text-decoration:none; white-space:nowrap;
+  transition:transform .4s var(--ease-out,cubic-bezier(.22,1,.36,1)),
+             box-shadow .4s ease, background .3s ease, color .3s ease;
+}
+.hv-pill{ background:var(--ink); color:#FBFAF7; box-shadow:0 10px 26px rgba(23,20,31,.17); }
+.hv-pill:hover{ transform:translateY(-2px); box-shadow:0 16px 36px rgba(23,20,31,.24); }
+.hv-pill .ar{ transition:transform .4s var(--ease-out,cubic-bezier(.22,1,.36,1)); }
+.hv-pill:hover .ar{ transform:translateX(5px); }
+.hv-ghost{ border:1.5px solid rgba(23,20,31,.22); color:var(--ink); }
+.hv-ghost:hover{ border-color:var(--ink); transform:translateY(-2px); }
+
+/* --- visual que sube --- */
+.hv-visual{
+  position:absolute; left:0; right:0; bottom:0; height:76%; z-index:2;
+  will-change:transform,opacity; transform-origin:50% 78%;
+}
+.hv-visual img{
+  width:100%; height:100%; display:block; object-fit:cover; object-position:center 66%;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 26%,#000 100%);
+          mask-image:linear-gradient(180deg,transparent 0%,#000 26%,#000 100%);
+}
+
+/* --- wordmark recortado sobre la imagen --- */
+.hv-mark{
+  position:absolute; inset:0; z-index:4; display:grid; place-items:center;
+  pointer-events:none; opacity:0; will-change:transform,opacity;
+}
+.hv-mark span{
+  font-size:clamp(5rem, 21vw, 21rem); font-weight:850; letter-spacing:-.05em;
+  line-height:.8;
+  background-image:var(--mark-img);
+  background-size:cover; background-position:center 62%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  -webkit-text-stroke:1.2px rgba(23,20,31,.16);
+}
+.hv-fade{
+  position:absolute; inset:0; z-index:5; pointer-events:none;
+  background:#F2EFE9; opacity:0; will-change:opacity;
+}
+.hv-scroll{
+  position:absolute; left:50%; bottom:1.6rem; translate:-50% 0; z-index:6;
+  font-family:var(--mono,monospace); font-size:.6rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--ink-mute,#6b6577); opacity:.6;
+}
+.hv-scroll::after{
+  content:""; display:block; width:1px; height:22px; margin:.5rem auto 0;
+  background:currentColor; transform-origin:top;
+  animation:hvTick 1.9s cubic-bezier(.65,0,.35,1) infinite;
+}
+@keyframes hvTick{ 0%{transform:scaleY(0)} 45%{transform:scaleY(1)} 100%{transform:scaleY(0); transform-origin:bottom} }
+
+/* ---------- 3. LOGOS DE CLIENTES A COLOR ----------------- */
+.clients{ background:var(--paper,#FBFAF7); }
+.clients-track img{
+  filter:none !important;
+  opacity:1 !important;
+  height:34px !important;
+  transition:transform .4s var(--ease-out,cubic-bezier(.22,1,.36,1));
+}
+.clients-marquee:hover .clients-track img{ opacity:.96 !important; }
+.clients-track img:hover{ transform:scale(1.07); }
+.clients-track .cl-word{
+  flex:0 0 auto; margin-right:clamp(2.6rem,6vw,5rem);
+  display:grid; justify-items:center; line-height:1; user-select:none;
+}
+.clients-track .cl-word i{
+  font-family:Georgia,"Times New Roman",serif; font-style:italic; font-weight:600;
+  font-size:27px; letter-spacing:-.02em; color:#2B1D12;
+}
+.clients-track .cl-word u{
+  text-decoration:none; font-size:7px; letter-spacing:.3em; text-transform:uppercase;
+  color:#8a7557; margin-top:3px;
+}
+
+/* ---------- 4. SERVICIOS EDITORIALES --------------------- */
+.svc-v2{ background:#0C0A14; color:#F2EFE9; padding:0; }
+.svc-intro{
+  display:grid; grid-template-columns:minmax(120px,1fr) minmax(0,2.4fr);
+  gap:clamp(1rem,4vw,3rem); align-items:start;
+  padding:clamp(5rem,13vh,9.5rem) var(--gutter,6vw) clamp(3rem,7vh,5rem);
+  border-bottom:1px solid rgba(242,239,233,.11);
+}
+.svc-eyebrow{
+  margin:.6rem 0 0; font-size:.78rem; font-weight:650; letter-spacing:.01em; color:#F2EFE9;
+}
+.svc-h2{
+  margin:0; font-size:clamp(2.2rem,5.6vw,5rem); line-height:1.02;
+  letter-spacing:-.04em; font-weight:450; color:#F2EFE9;
+}
+.svc-h2 span{ color:rgba(242,239,233,.42); }
+
+.svc-row{
+  display:grid; grid-template-columns:minmax(120px,1fr) minmax(0,2.4fr);
+  gap:clamp(1rem,4vw,3rem); align-items:center;
+  padding:clamp(3.4rem,9vh,6.4rem) var(--gutter,6vw);
+  border-bottom:1px solid rgba(242,239,233,.11);
+  position:relative;
+}
+.svc-left{ display:flex; gap:clamp(1rem,2.2vw,2rem); align-items:flex-start; }
+.svc-n{
+  flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+  border:1px solid rgba(242,239,233,.42);
+  display:grid; place-items:center; font-size:.8rem; font-weight:600;
+  color:#F2EFE9;
+}
+.svc-copy{ max-width:34ch; }
+.svc-copy p{
+  margin:0; font-size:clamp(.92rem,1.02vw,1.02rem); line-height:1.52;
+  color:rgba(242,239,233,.84); font-weight:460;
+}
+.svc-copy a{
+  display:inline-flex; align-items:center; gap:.4rem; margin-top:1rem;
+  color:#F2EFE9; font-size:.84rem; font-weight:600; text-decoration:none;
+  border-bottom:1px solid rgba(242,239,233,.3); padding-bottom:2px;
+  transition:border-color .3s ease, gap .3s ease;
+}
+.svc-copy a:hover{ border-color:#F2EFE9; gap:.75rem; }
+
+.svc-big{
+  margin:0; font-size:clamp(3.2rem,11.5vw,11rem); line-height:.88;
+  letter-spacing:-.045em; font-weight:300; color:rgba(242,239,233,.9);
+  position:relative; display:block;
+}
+.svc-big .fill{
+  position:absolute; inset:0; display:block; font-weight:300;
+  background-image:var(--svc-img); background-size:cover; background-position:center;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path 1.15s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
+}
+.svc-row.is-in .svc-big .fill{ clip-path:inset(0 0% 0 0); }
+.svc-big .base{ opacity:.26; }
+.svc-row.is-in .svc-big .base{ opacity:.26; }
+
+@media (max-width:860px){
+  .svc-intro,.svc-row{ grid-template-columns:1fr; }
+  .svc-big{ font-size:clamp(3rem,16vw,6rem); margin-top:1.6rem; }
+  .hv-visual{ width:92vw; }
+}
+
+/* ---------- 5. RESPETO A REDUCED MOTION ------------------ */
+@media (prefers-reduced-motion:reduce){
+  .hv-mark,.hv-fade{ display:none; }
+  .svc-big .fill{ clip-path:inset(0 0 0 0); transition:none; }
+  .hv-scroll::after{ animation:none; }
+}
