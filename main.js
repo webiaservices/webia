@@ -597,13 +597,13 @@
     if(reduced||!window.gsap||!window.ScrollTrigger)return;
     var hero=$("[data-parallax]");
     if(hero)gsap.to(hero,{yPercent:14,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:0.5}});
-    $("[data-parallax-in]").forEach(function(img){
+    $$("[data-parallax-in]").forEach(function(img){
       gsap.fromTo(img,{yPercent:-9},{yPercent:9,ease:"none",scrollTrigger:{trigger:img.parentElement,start:"top bottom",end:"bottom top",scrub:0.6}});
     });
   }
   function initSectionNumbers(){
     var n=0;
-    $("section[id] .section-head .kicker, .systems .kicker-light").forEach(function(k){
+    $$("section[id] .section-head .kicker, .systems .kicker-light").forEach(function(k){
       if(k.previousElementSibling&&k.previousElementSibling.classList.contains("sec-num"))return;
       n++;var s=document.createElement("span");s.className="sec-num";s.textContent="S."+String(n).padStart(2,"0");
       k.parentNode.insertBefore(s,k);
