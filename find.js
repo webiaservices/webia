@@ -77,7 +77,7 @@
       scrollTrigger: {
         trigger: pin,
         start: "top top",
-        end: "+=260%",
+        end: "+=185%",
         pin: true,
         scrub: 0.6,
         anticipatePin: 1,
@@ -92,9 +92,9 @@
       .fromTo(mark,
               { opacity: 0, scale: 0.68 },
               { opacity: 1, scale: 1.06, ease: "none", duration: 0.52 }, 0.26)
-      .to(mark,   { scale: 1.34, ease: "none", duration: 0.2 }, 0.78)
-      .to(fade,   { opacity: 1, ease: "power1.in", duration: 0.17 }, 0.83)
-      .to(dim,    { opacity: 0, ease: "power1.in", duration: 0.17 }, 0.83);
+      .to(mark,   { scale: 1.34, ease: "none", duration: 0.14 }, 0.86)
+      .to(fade,   { opacity: 1, ease: "power1.in", duration: 0.12 }, 0.88)
+      .to(dim,    { opacity: 0, ease: "power1.in", duration: 0.12 }, 0.88);
   }
 
   /* ---------- 4. SERVICIOS: palabra que se rellena --------- */
