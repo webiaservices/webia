@@ -140,12 +140,12 @@
     fitMocks();
     window.addEventListener("resize", fitMocks);
   }
-  // el mock está diseñado a 760px; en pantallas angostas se escala completo
+  // el mock está diseñado a 960px; se escala para caber completo en la ventana
   function fitMocks() {
     $$(".pj-screen").forEach(function (s) {
       $$(".am", s).forEach(function (am) {
         var w = s.clientWidth;
-        am.style.zoom = w && w < 760 ? (w / 760).toFixed(3) : "";
+        if (w) am.style.zoom = (w / 960).toFixed(4);
       });
     });
   }

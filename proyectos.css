@@ -106,6 +106,7 @@ html.lenis{ scroll-behavior:auto !important; }
   border-bottom:1px solid var(--line);
   scroll-margin-top:118px;
 }
+.pj.wide{ grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr); }
 .pj-info{ position:sticky; top:150px; }
 .pj-top{ display:flex; align-items:center; gap:.8rem; margin-bottom:1.1rem; }
 .pj-n{ font-family:"JetBrains Mono",monospace; font-size:.8rem; color:var(--mute); }
@@ -248,7 +249,8 @@ html.lenis{ scroll-behavior:auto !important; }
 /* ============================================================
    MOCK DEL SISTEMA DE ADMIFY (datos 100% inventados)
    ============================================================ */
-.am{ font-family:Inter,system-ui,sans-serif; color:#1B2437; background:#F4F6FA; font-size:13px; min-width:760px; }
+.am{ font-family:Inter,system-ui,sans-serif; color:#1B2437; background:#F4F6FA; font-size:13px; width:960px; }
+.pj-screen{ overflow-x:hidden; }
 .am-app{ height:46px; display:flex; align-items:center; gap:14px; padding:0 16px; background:#1E2B4D; color:#fff; font-size:12px; }
 .am-app .am-logo{ display:flex; align-items:center; gap:6px; font-weight:700; font-size:15px; letter-spacing:-.01em; }
 .am-app .am-logo i{ width:18px; height:18px; border-radius:50%; background:#fff; display:inline-block; position:relative; }
