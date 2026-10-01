@@ -265,6 +265,13 @@ html.lenis{ scroll-behavior:auto !important; }
 
 /* celular: ventana grande detrás, teléfono legible al frente */
 @media (max-width:760px){
+  .hv-cta{ flex-wrap:nowrap; gap:.5rem; }
+  .hv-pill,.hv-ghost{ padding:.82rem 1.15rem; font-size:.88rem; }
+}
+@media (max-width:370px){
+  .hv-pill,.hv-ghost{ padding:.78rem .85rem; font-size:.82rem; }
+}
+@media (max-width:760px){
   .hv-visual{ height:46%; }
   .ui-scene{ --u: calc(158vw / 112); left:5vw; translate:none; top:3%; }
   .ui-phone{ font-size:calc(50vw / 27); left:42vw; right:auto; top:5vw; }
@@ -477,7 +484,7 @@ html.lenis{ scroll-behavior:auto !important; }
 .sc-bar span{
   margin-left:10px; font:500 10.5px/1 var(--mono,monospace); color:#8b8696; letter-spacing:.02em;
 }
-.sc-card img{ display:block; width:100%; aspect-ratio:16/10; object-fit:cover; object-position:top center; }
+.sc-card img{ display:block; width:100%; aspect-ratio:2/1; object-fit:cover; object-position:top center; }
 .sc-c1{ left:0;   top:2%;  z-index:1; transform:rotate(-6deg); }
 .sc-c2{ left:12%; top:15%; z-index:2; transform:rotate(1.5deg); }
 .sc-c3{ left:24%; top:28%; z-index:3; transform:rotate(6.5deg); }
