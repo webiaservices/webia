@@ -95,10 +95,11 @@
     var pin = $(".hv-pin");
     if (!pin || reduce) return;
     if (!window.gsap || !window.ScrollTrigger) return;
-    if (window.innerWidth < 760) return;
 
     var gsap = window.gsap;
     gsap.registerPlugin(window.ScrollTrigger);
+    // en celular la barra de direcciones cambia el alto: no recalcular por eso
+    window.ScrollTrigger.config({ ignoreMobileResize: true });
 
     var hint    = $(".hv-scroll");
     var copy    = $("[data-hv-copy]");
@@ -191,11 +192,22 @@
     rows.forEach(function (r) { io.observe(r); });
   }
 
-  /* ---------- 7. PROYECTOS: preview que sigue al cursor ---- */
-  function initWorkPreview() {
+  /* ---------- 7. PREVIEW QUE SIGUE AL CURSOR --------------
+     Proyectos (sobre la fila) y Servicios (sobre toda la fila).
+     Al hacer scroll se actualiza según lo que quede bajo el mouse. */
+  function initPreviews() {
     if (reduce || !finePointer) return;
-    var rows = $$("#trabajo .work-row[data-preview]");
-    if (!rows.length) return;
+    var targets = [];
+    $$("#trabajo .work-row[data-preview]").forEach(function (row) {
+      var head = row.querySelector(".work-head");
+      if (head) targets.push({ el: head, src: row.getAttribute("data-preview"),
+        skip: function () { return head.getAttribute("aria-expanded") === "true"; }, closeOnClick: true });
+    });
+    $$(".svc-row[data-preview]").forEach(function (row) {
+      targets.push({ el: row.querySelector(".svc-big") || row, src: row.getAttribute("data-preview"),
+        skip: function () { return false; }, closeOnClick: false });
+    });
+    if (!targets.length) return;
 
     var box = document.createElement("div");
     box.className = "wk-float";
@@ -203,11 +215,9 @@
     box.innerHTML = '<div class="wk-float-in"><img alt="" decoding="async"></div>';
     document.body.appendChild(box);
     var img = box.querySelector("img");
+    targets.forEach(function (t) { var i = new Image(); i.src = t.src; });   // precarga
 
-    // precarga
-    rows.forEach(function (r) { var i = new Image(); i.src = r.getAttribute("data-preview"); });
-
-    var x = 0, y = 0, tx = 0, ty = 0, raf = 0, shown = false, flip = false;
+    var x = 0, y = 0, tx = -999, ty = -999, raf = 0, shown = false, flip = false, current = null;
     function loop() {
       x += (tx - x) * 0.17;
       y += (ty - y) * 0.17;
@@ -218,29 +228,65 @@
     function kick() { if (!raf) raf = requestAnimationFrame(loop); }
     function aim(e) {
       tx = e.clientX; ty = e.clientY;
-      var want = tx > window.innerWidth * 0.62;
+      var want = tx > window.innerWidth * 0.6;
       if (want !== flip) { flip = want; box.classList.toggle("flip", flip); }
     }
-    function hide() { shown = false; box.classList.remove("on"); }
+    function show(t) {
+      if (t.skip()) { hide(); return; }
+      if (img.getAttribute("src") !== t.src) img.src = t.src;
+      if (!shown && !raf) { x = tx; y = ty; }
+      current = t; shown = true; box.classList.add("on"); kick();
+    }
+    function hide() { current = null; shown = false; box.classList.remove("on"); }
 
-    rows.forEach(function (row) {
-      var head = row.querySelector(".work-head");
-      if (!head) return;
-      head.addEventListener("mouseenter", function (e) {
-        if (head.getAttribute("aria-expanded") === "true") return;
-        var src = row.getAttribute("data-preview");
-        if (img.getAttribute("src") !== src) img.src = src;
-        aim(e);
-        if (!shown && !raf) { x = tx; y = ty; }
-        shown = true;
-        box.classList.add("on");
-        kick();
-      });
-      head.addEventListener("mousemove", function (e) { aim(e); kick(); });
-      head.addEventListener("mouseleave", hide);
-      head.addEventListener("click", hide);
+    targets.forEach(function (t) {
+      t.el.addEventListener("mouseenter", function (e) { aim(e); show(t); });
+      t.el.addEventListener("mousemove", function (e) { aim(e); if (!shown) show(t); kick(); });
+      t.el.addEventListener("mouseleave", function () { if (current === t) hide(); });
+      if (t.closeOnClick) t.el.addEventListener("click", hide);
     });
-    window.addEventListener("scroll", function () { if (shown) hide(); }, { passive: true });
+
+    window.addEventListener("scroll", function () {
+      if (tx < 0) return;
+      var under = document.elementFromPoint(tx, ty);
+      var found = null;
+      if (under) for (var i = 0; i < targets.length; i++) { if (targets[i].el.contains(under)) { found = targets[i]; break; } }
+      if (found) { if (found !== current) show(found); }
+      else if (shown) hide();
+    }, { passive: true });
+  }
+
+  /* ---------- 7b. SERVICIOS: todas las palabras del mismo tamaño,
+       la más larga ("Automatización") define el tamaño que cabe ---- */
+  function initFitWords() {
+    var heads = $$(".svc-big");
+    if (!heads.length) return;
+    function fit() {
+      heads.forEach(function (h) { h.style.fontSize = ""; });
+      var base = parseFloat(getComputedStyle(heads[0]).fontSize);
+      var ratio = 1;
+      heads.forEach(function (h) {
+        var word = h.querySelector(".base");
+        if (!word) return;
+        var need = word.getBoundingClientRect().width;
+        var avail = h.clientWidth;
+        if (need > 0 && avail > 0) ratio = Math.min(ratio, avail / need);
+      });
+      if (ratio < 1) {
+        var size = Math.floor(base * ratio * 0.97);
+        heads.forEach(function (h) { h.style.fontSize = size + "px"; });
+      }
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    }
+    var t = 0, lastW = window.innerWidth;
+    function later() {
+      if (window.innerWidth === lastW) return;   // en celular, la barra de direcciones no cuenta
+      lastW = window.innerWidth;
+      clearTimeout(t); t = setTimeout(fit, 150);
+    }
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    window.addEventListener("resize", later);
   }
 
   /* ---------- 8. Refrescar medidas al cargar fotos --------- */
@@ -260,9 +306,10 @@
     safe(initNavStuck,    "initNavStuck");
     safe(initHeroWords,   "initHeroWords");
     safe(initHeroMouse,   "initHeroMouse");
+    safe(initFitWords,    "initFitWords");
     safe(initHeroScene,   "initHeroScene");
     safe(initSvcRows,     "initSvcRows");
-    safe(initWorkPreview, "initWorkPreview");
+    safe(initPreviews,    "initPreviews");
     safe(initRefresh,     "initRefresh");
   }
 
