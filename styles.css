@@ -1271,3 +1271,47 @@ html.no-js .reveal { opacity: 1; transform: none; }
   object-fit: contain; object-position: left;
   margin-bottom: .55rem; opacity: .92;
 }
+
+/* 20. Barra de progreso */
+.scroll-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:1200;pointer-events:none}
+.scroll-bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--indigo),var(--violet));box-shadow:0 0 12px rgba(139,92,246,.7)}
+
+/* 21. Hero cinematográfico */
+.hero-dark{background:#07060C;color:var(--bg);text-align:left;place-items:center start;padding-inline:var(--gutter)}
+.hero-dark .hero-inner{max-width:1200px;width:100%}
+.hero-media{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-img{position:absolute;inset:-12% 0;width:100%;height:124%;object-fit:cover;object-position:center right;will-change:transform}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(90deg,#07060C 4%,rgba(7,6,12,.86) 34%,rgba(7,6,12,.30) 66%,rgba(7,6,12,.55) 100%),linear-gradient(180deg,rgba(7,6,12,.85) 0%,transparent 22%,transparent 62%,#07060C 100%)}
+.hero-dark .hero-title{font-size:clamp(2.6rem,7.6vw,6.2rem);max-width:16ch}
+.hero-dark .hero-sub{margin:1.7rem 0 0;max-width:46ch;color:rgba(242,239,233,.74)}
+.hero-dark .hero-actions{justify-content:flex-start}
+.hero-dark .hero-scroll{border-color:rgba(242,239,233,.3)}
+.btn-outline{border:1.5px solid rgba(242,239,233,.32);background:transparent;color:var(--bg)}
+.btn-outline:hover{border-color:#fff;background:rgba(255,255,255,.07)}
+.hero-meta{margin-top:3rem;padding-top:1.8rem;border-top:1px solid rgba(242,239,233,.16);display:grid;grid-template-columns:repeat(3,auto);gap:1.4rem 3rem;justify-content:start}
+.hero-meta div{display:grid;gap:.2rem}
+.hero-meta b{font-family:var(--disp);font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;letter-spacing:-.03em;color:#fff}
+.hero-meta span{font-family:var(--mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:rgba(242,239,233,.55)}
+@media(max-width:719px){.hero-meta{grid-template-columns:1fr 1fr;gap:1.2rem 1.5rem}}
+
+/* 22. Logos de clientes */
+.clients{background:var(--bg);border-bottom:1px solid var(--line);padding:clamp(2.2rem,4vw,3.2rem) 0 clamp(2rem,3.5vw,2.8rem)}
+.clients-label{text-align:center;margin-bottom:1.8rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mute)}
+.clients-marquee{overflow:clip;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.clients-track{display:flex;align-items:center;width:max-content;animation:clientScroll 38s linear infinite;will-change:transform}
+@keyframes clientScroll{to{transform:translate3d(-33.333%,0,0)}}
+.clients-marquee:hover .clients-track{animation-play-state:paused}
+.clients-track img{height:30px;width:auto;margin-right:clamp(2.6rem,6vw,5rem);object-fit:contain;filter:grayscale(1);opacity:.5;transition:filter .35s var(--ease-out),opacity .35s var(--ease-out)}
+.clients-track img:hover{filter:none;opacity:1}
+@media(prefers-reduced-motion:reduce){.clients-track{animation:none}}
+
+/* 23. Numeración de secciones */
+.sec-num{display:block;margin-bottom:.9rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;color:var(--ink-mute)}
+.systems .sec-num{color:rgba(242,239,233,.45)}
+
+/* 24. Tarjetas de servicio con imagen */
+.service-media{padding:0 0 2.6rem;overflow:hidden}
+.svc-img{height:170px;overflow:hidden;border-radius:calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;background:#0E0B16;margin-bottom:1.6rem}
+.svc-img img{width:100%;height:122%;object-fit:cover;will-change:transform}
+.service-media .service-num,.service-media h3,.service-media p{padding-inline:2rem}
+.service-media .service-num{display:block}

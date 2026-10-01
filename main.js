@@ -585,6 +585,31 @@
     });
   }
 
+
+  function initScrollBar(){
+    var bar=$("[data-scroll-bar] i"); if(!bar) return;
+    var target=0,cur=0;
+    function calc(){var m=document.documentElement.scrollHeight-window.innerHeight;target=m>0?(window.scrollY/m)*100:0;}
+    window.addEventListener("scroll",calc,{passive:true});window.addEventListener("resize",calc);calc();
+    addUpdater(function(){var d=target-cur;if(Math.abs(d)<0.05)return;cur+=d*0.12;bar.style.width=cur.toFixed(2)+"%";});
+  }
+  function initImageParallax(){
+    if(reduced||!window.gsap||!window.ScrollTrigger)return;
+    var hero=$("[data-parallax]");
+    if(hero)gsap.to(hero,{yPercent:14,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:0.5}});
+    $("[data-parallax-in]").forEach(function(img){
+      gsap.fromTo(img,{yPercent:-9},{yPercent:9,ease:"none",scrollTrigger:{trigger:img.parentElement,start:"top bottom",end:"bottom top",scrub:0.6}});
+    });
+  }
+  function initSectionNumbers(){
+    var n=0;
+    $("section[id] .section-head .kicker, .systems .kicker-light").forEach(function(k){
+      if(k.previousElementSibling&&k.previousElementSibling.classList.contains("sec-num"))return;
+      n++;var s=document.createElement("span");s.className="sec-num";s.textContent="S."+String(n).padStart(2,"0");
+      k.parentNode.insertBefore(s,k);
+    });
+  }
+
   /* ----------------------------------------------------------
      WhatsApp / formulario / plan
      ---------------------------------------------------------- */
@@ -680,6 +705,8 @@
     safe(initCursor, "initCursor");
     safe(initNav, "initNav");
     safe(initSmoothAnchors, "initSmoothAnchors");
+    safe(initScrollBar, "initScrollBar");
+    safe(initSectionNumbers, "initSectionNumbers");
     safe(initReveals, "initReveals");
     safe(initMockShots, "initMockShots");
     safe(initWorkRows, "initWorkRows");
@@ -699,6 +726,7 @@
       safe(initStaggerGrids, "initStaggerGrids");
       safe(initMarqueeVelocity, "initMarqueeVelocity");
       safe(initScrollParallax, "initScrollParallax");
+      safe(initImageParallax, "initImageParallax");
     } else {
       safe(initScrubWords, "initScrubWords"); // sin GSAP: solo wrap, texto visible
     }
