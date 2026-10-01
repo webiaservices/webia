@@ -242,6 +242,7 @@
       var el = document.querySelector(id);
       if (!el) return;
       e.preventDefault();
+      if (window.__lenis) { window.__lenis.scrollTo(el, { offset: -80, duration: 1.3 }); return; }
       window.scrollTo({
         top: el.getBoundingClientRect().top + window.scrollY - 80,
         behavior: reduced ? "auto" : "smooth"

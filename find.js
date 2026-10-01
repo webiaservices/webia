@@ -1,19 +1,42 @@
 /* ============================================================
-   WEBIA — capa "FIND". Se carga DESPUÉS de main.js.
-   Sin módulos, sin dependencias nuevas. Todo guardado en try.
+   WEBIA — capa "FIND" v3. Se carga DESPUÉS de main.js.
+   Sin módulos. Cada bloque aislado en try/catch.
    ============================================================ */
 (function () {
   "use strict";
 
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var mq = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
+  var reduce = mq("(prefers-reduced-motion: reduce)");
+  var finePointer = mq("(hover: hover) and (pointer: fine)");
 
   function safe(fn, name) {
     try { fn(); } catch (e) { console.warn("[" + name + "]", e); }
   }
 
-  /* ---------- 1. NAV: fondo sólido al bajar ---------------- */
+  /* ---------- 1. SMOOTH SCROLL (Lenis + GSAP) -------------- */
+  function initLenis() {
+    if (reduce || !finePointer || !window.Lenis) return;
+    var lenis = new window.Lenis({
+      lerp: 0.09,
+      wheelMultiplier: 0.95,
+      smoothWheel: true,
+      autoRaf: false
+    });
+    window.__lenis = lenis;
+
+    if (window.gsap && window.ScrollTrigger) {
+      lenis.on("scroll", window.ScrollTrigger.update);
+      window.gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      window.gsap.ticker.lagSmoothing(0);
+    } else {
+      var raf = function (t) { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+    }
+  }
+
+  /* ---------- 2. NAV: fondo al bajar ----------------------- */
   function initNavStuck() {
     var nav = $(".nav");
     if (!nav) return;
@@ -26,16 +49,13 @@
     window.addEventListener("scroll", check, { passive: true });
   }
 
-  /* ---------- 2. HERO: palabras que entran ----------------- */
+  /* ---------- 3. HERO: palabras que entran ----------------- */
   function initHeroWords() {
     var title = $(".hv-title");
-    if (!title) return;
+    if (!title || reduce) return;
     var words = $$(".w", title);
-    if (!words.length || reduce) return;
-
-    var root = document.documentElement;
+    if (!words.length) return;
     var EASE = "cubic-bezier(.22,1,.36,1)";
-
     words.forEach(function (w, i) {
       w.style.transition =
         "opacity .72s " + EASE + " " + (0.16 + i * 0.055) + "s," +
@@ -46,58 +66,116 @@
         "opacity .8s " + EASE + " " + (0.52 + i * 0.1) + "s," +
         "transform .8s " + EASE + " " + (0.52 + i * 0.1) + "s";
     });
-
+    var root = document.documentElement;
     root.classList.add("js-hv");
-    // setTimeout (no rAF): sigue corriendo aunque la pestaña esté en segundo plano,
-    // así el texto nunca se queda invisible.
+    // setTimeout (no rAF): corre aunque la pestaña esté en segundo plano
     setTimeout(function () { root.classList.add("hv-in"); }, 70);
-    // cinturón y tirantes
     setTimeout(function () { root.classList.add("hv-in"); }, 1200);
   }
 
-  /* ---------- 3. HERO: escena con scroll (pin) ------------- */
+  /* ---------- 4. HERO: la imagen sigue al mouse ------------ */
+  function initHeroMouse() {
+    if (reduce || !finePointer || !window.gsap) return;
+    var img = $("[data-hv-visual] img");
+    var hero = $(".hero-v2");
+    if (!img || !hero) return;
+    var gx = window.gsap.quickTo(img, "x", { duration: 1.1, ease: "power3.out" });
+    var gy = window.gsap.quickTo(img, "y", { duration: 1.1, ease: "power3.out" });
+    hero.addEventListener("mousemove", function (e) {
+      var nx = e.clientX / window.innerWidth - 0.5;
+      var ny = e.clientY / window.innerHeight - 0.5;
+      gx(nx * -22);
+      gy(ny * -12);
+    });
+    hero.addEventListener("mouseleave", function () { gx(0); gy(0); });
+  }
+
+  /* ---------- 5. HERO → TELÓN DE MARCA (pin + scrub) ------- */
   function initHeroScene() {
     var pin = $(".hv-pin");
     if (!pin || reduce) return;
     if (!window.gsap || !window.ScrollTrigger) return;
-    if (window.innerWidth < 760) return;          // en móvil se queda estático
+    if (window.innerWidth < 760) return;
 
     var gsap = window.gsap;
     gsap.registerPlugin(window.ScrollTrigger);
 
-    var copy   = $("[data-hv-copy]");
-    var visual = $("[data-hv-visual]");
-    var mark   = $("[data-hv-mark]");
-    var dim    = $("[data-hv-dim]");
-    var fade   = $("[data-hv-fade]");
-    var hint   = $(".hv-scroll");
-    if (!copy || !visual || !mark) return;
+    var hint    = $(".hv-scroll");
+    var copy    = $("[data-hv-copy]");
+    var visual  = $("[data-hv-visual]");
+    var under   = $("[data-hv-under]");
+    var curtain = $("[data-hv-curtain]");
+    var edgeIn  = $("[data-hv-edge-in]");
+    var edgeOut = $("[data-hv-edge-out]");
+    var brand   = $(".hv-brand");
+    var fill    = $("[data-hv-fill]");
+    var letters = $$(".hv-knock .hv-l > span");
+    var spark   = $("[data-hv-spark]");
+    var tags    = $$(".hv-over .hv-tag span");
+    var nav     = $(".nav");
+    if (!copy || !visual || !curtain || !brand || !letters.length) return;
+
+    var isLive = false, isDark = false;
+    function setLive(v) { if (v !== isLive) { isLive = v; curtain.classList.toggle("is-live", v); } }
+    function setDark(v) { if (v !== isDark) { isDark = v; if (nav) nav.classList.toggle("nav--dark", v); } }
 
     var tl = gsap.timeline({
+      defaults: { ease: "none" },
       scrollTrigger: {
         trigger: pin,
         start: "top top",
-        end: "+=185%",
+        end: "+=230%",
         pin: true,
-        scrub: 0.6,
+        scrub: window.__lenis ? 0.45 : 0.7,
         anticipatePin: 1,
-        invalidateOnRefresh: true
+        invalidateOnRefresh: true,
+        onUpdate: function (self) {
+          var p = self.progress;
+          setLive(p > 0.1 && p < 0.997);
+          setDark(p > 0.33 && p < 0.97);
+        },
+        onLeave: function () { setLive(false); setDark(false); },
+        onLeaveBack: function () { setLive(false); setDark(false); }
       }
     });
 
-    tl.to(hint,   { opacity: 0, duration: 0.06 }, 0)
-      .to(copy,   { yPercent: -16, scale: 0.9, opacity: 0, ease: "power2.in", duration: 0.34 }, 0)
-      .to(visual, { scale: 3.05, yPercent: -16, ease: "none", duration: 0.78 }, 0)
-      .to(dim,    { opacity: 0.88, ease: "power1.inOut", duration: 0.3 }, 0.2)
-      .fromTo(mark,
-              { opacity: 0, scale: 0.68 },
-              { opacity: 1, scale: 1.06, ease: "none", duration: 0.52 }, 0.26)
-      .to(mark,   { scale: 1.34, ease: "none", duration: 0.14 }, 0.86)
-      .to(fade,   { opacity: 1, ease: "power1.in", duration: 0.12 }, 0.88)
-      .to(dim,    { opacity: 0, ease: "power1.in", duration: 0.12 }, 0.88);
+    tl.to(hint, { opacity: 0, duration: 0.05 }, 0)
+      .to(copy, { yPercent: -22, opacity: 0, ease: "power2.in", duration: 0.26 }, 0)
+      .to(visual, { scale: 1.2, yPercent: -4, duration: 0.42 }, 0)
+
+      // el telón sube
+      .fromTo(curtain, { clipPath: "inset(100% 0% 0% 0%)" },
+                       { clipPath: "inset(0% 0% 0% 0%)", ease: "power2.inOut", duration: 0.26 }, 0.14)
+      .fromTo(edgeIn, { yPercent: 100 }, { yPercent: 0, ease: "power2.inOut", duration: 0.26 }, 0.14)
+      .fromTo(edgeIn, { opacity: 0 }, { opacity: 1, duration: 0.03 }, 0.14)
+      .to(edgeIn, { opacity: 0, duration: 0.04 }, 0.37)
+
+      // detrás del telón: limpiar para la salida
+      .set(visual, { opacity: 0 }, 0.41)
+      .set(under, { opacity: 1 }, 0.41)
+
+      // el relleno vive todo el tiempo
+      .fromTo(fill, { scale: 1.24, xPercent: -5 }, { scale: 1, xPercent: 5, duration: 0.86 }, 0.14)
+
+      // letras suben una por una
+      .fromTo(letters, { yPercent: 118 },
+                       { yPercent: 0, ease: "power3.out", duration: 0.17, stagger: 0.032 }, 0.25)
+      .fromTo(spark, { scale: 0, rotation: -140, opacity: 0, transformOrigin: "50% 50%" },
+                     { scale: 1, rotation: 0, opacity: 1, ease: "back.out(2.2)", duration: 0.12 }, 0.44)
+      .fromTo(tags, { opacity: 0, y: 14 },
+                    { opacity: 1, y: 0, ease: "power2.out", duration: 0.1, stagger: 0.025 }, 0.47)
+      .fromTo(brand, { scale: 1 }, { scale: 1.04, duration: 0.3 }, 0.55)
+
+      // salida: el telón se va hacia arriba
+      .fromTo(curtain, { clipPath: "inset(0% 0% 0% 0%)" },
+                       { clipPath: "inset(0% 0% 100% 0%)", ease: "power2.inOut", duration: 0.15, immediateRender: false }, 0.85)
+      .to(brand, { yPercent: -16, ease: "power2.in", duration: 0.15 }, 0.85)
+      .fromTo(edgeOut, { yPercent: 100 }, { yPercent: 0, ease: "power2.inOut", duration: 0.15 }, 0.85)
+      .fromTo(edgeOut, { opacity: 0 }, { opacity: 1, duration: 0.02 }, 0.85)
+      .to(edgeOut, { opacity: 0, duration: 0.02 }, 0.98);
   }
 
-  /* ---------- 4. SERVICIOS: palabra que se rellena --------- */
+  /* ---------- 6. SERVICIOS: palabra que se rellena --------- */
   function initSvcRows() {
     var rows = $$(".svc-row");
     if (!rows.length) return;
@@ -107,41 +185,87 @@
     }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          en.target.classList.add("is-in");
-          io.unobserve(en.target);
-        }
+        if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
       });
-    }, { threshold: 0.32, rootMargin: "0px 0px -8% 0px" });
+    }, { threshold: 0.3, rootMargin: "0px 0px -8% 0px" });
     rows.forEach(function (r) { io.observe(r); });
   }
 
-  /* ---------- 5. Refrescar ScrollTrigger al cargar fotos --- */
+  /* ---------- 7. PROYECTOS: preview que sigue al cursor ---- */
+  function initWorkPreview() {
+    if (reduce || !finePointer) return;
+    var rows = $$("#trabajo .work-row[data-preview]");
+    if (!rows.length) return;
+
+    var box = document.createElement("div");
+    box.className = "wk-float";
+    box.setAttribute("aria-hidden", "true");
+    box.innerHTML = '<div class="wk-float-in"><img alt="" decoding="async"></div>';
+    document.body.appendChild(box);
+    var img = box.querySelector("img");
+
+    // precarga
+    rows.forEach(function (r) { var i = new Image(); i.src = r.getAttribute("data-preview"); });
+
+    var x = 0, y = 0, tx = 0, ty = 0, raf = 0, shown = false, flip = false;
+    function loop() {
+      x += (tx - x) * 0.17;
+      y += (ty - y) * 0.17;
+      box.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+      if (shown || Math.abs(tx - x) > 0.4 || Math.abs(ty - y) > 0.4) raf = requestAnimationFrame(loop);
+      else raf = 0;
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+    function aim(e) {
+      tx = e.clientX; ty = e.clientY;
+      var want = tx > window.innerWidth * 0.62;
+      if (want !== flip) { flip = want; box.classList.toggle("flip", flip); }
+    }
+    function hide() { shown = false; box.classList.remove("on"); }
+
+    rows.forEach(function (row) {
+      var head = row.querySelector(".work-head");
+      if (!head) return;
+      head.addEventListener("mouseenter", function (e) {
+        if (head.getAttribute("aria-expanded") === "true") return;
+        var src = row.getAttribute("data-preview");
+        if (img.getAttribute("src") !== src) img.src = src;
+        aim(e);
+        if (!shown && !raf) { x = tx; y = ty; }
+        shown = true;
+        box.classList.add("on");
+        kick();
+      });
+      head.addEventListener("mousemove", function (e) { aim(e); kick(); });
+      head.addEventListener("mouseleave", hide);
+      head.addEventListener("click", hide);
+    });
+    window.addEventListener("scroll", function () { if (shown) hide(); }, { passive: true });
+  }
+
+  /* ---------- 8. Refrescar medidas al cargar fotos --------- */
   function initRefresh() {
     if (!window.ScrollTrigger) return;
-    window.addEventListener("load", function () {
-      window.ScrollTrigger.refresh();
-    });
+    var t = 0;
+    function later() { clearTimeout(t); t = setTimeout(function () { window.ScrollTrigger.refresh(); }, 120); }
+    window.addEventListener("load", later);
     $$("img").forEach(function (im) {
-      if (!im.complete) {
-        im.addEventListener("load", function () {
-          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-        }, { once: true });
-      }
+      if (!im.complete) im.addEventListener("load", later, { once: true });
     });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(later);
   }
 
   function boot() {
-    safe(initNavStuck,  "initNavStuck");
-    safe(initHeroWords, "initHeroWords");
-    safe(initHeroScene, "initHeroScene");
-    safe(initSvcRows,   "initSvcRows");
-    safe(initRefresh,   "initRefresh");
+    safe(initLenis,       "initLenis");
+    safe(initNavStuck,    "initNavStuck");
+    safe(initHeroWords,   "initHeroWords");
+    safe(initHeroMouse,   "initHeroMouse");
+    safe(initHeroScene,   "initHeroScene");
+    safe(initSvcRows,     "initSvcRows");
+    safe(initWorkPreview, "initWorkPreview");
+    safe(initRefresh,     "initRefresh");
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();

@@ -1,80 +1,82 @@
 /* ============================================================
-   WEBIA — capa "FIND": hero cinemático, servicios editoriales,
-   nav legible y logos a color. Se carga DESPUÉS de styles.css.
+   WEBIA — capa "FIND" v3. Se carga DESPUÉS de styles.css.
+   Hero cinemático + telón de marca, servicios editoriales,
+   nav adaptable, logos a color, preview flotante, smooth scroll.
    ============================================================ */
 
-/* ---------- 1. NAV LEGIBLE ------------------------------- */
+/* ---------- 0. SMOOTH SCROLL (Lenis) --------------------- */
+html.lenis, html.lenis body{ height:auto; }
+html.lenis{ scroll-behavior:auto !important; }
+.lenis.lenis-stopped{ overflow:clip; }
+.lenis.lenis-smooth iframe{ pointer-events:none; }
+
+/* ---------- 1. NAV ADAPTABLE ----------------------------- */
 .nav{
-  transition:background .4s var(--ease-out,cubic-bezier(.22,1,.36,1)),
-             backdrop-filter .4s ease, box-shadow .4s ease;
+  transition:background .45s cubic-bezier(.22,1,.36,1),
+             backdrop-filter .45s ease, box-shadow .45s ease;
 }
 .nav .nav-links a,
 .nav .nav-name,
-.nav .snd-toggle{ color:var(--ink); opacity:.78; }
-.nav .nav-links a{ font-weight:560; }
+.nav .snd-toggle{ color:var(--ink); transition:color .45s ease, opacity .3s ease; }
+.nav .nav-links a{ opacity:.74; font-weight:560; position:relative; }
 .nav .nav-links a:hover{ opacity:1; }
-.nav .nav-name{ opacity:1; font-weight:600; }
-.nav.is-stuck{
-  background:rgba(251,250,247,.82);
-  backdrop-filter:saturate(1.3) blur(14px);
-  -webkit-backdrop-filter:saturate(1.3) blur(14px);
-  box-shadow:0 1px 0 rgba(23,20,31,.07);
-}
-/* subrayado que crece */
-.nav .nav-links a{ position:relative; }
+.nav .nav-name{ font-weight:600; }
 .nav .nav-links a::after{
   content:""; position:absolute; left:0; right:0; bottom:-5px; height:1.5px;
   background:currentColor; transform:scaleX(0); transform-origin:right;
   transition:transform .42s cubic-bezier(.22,1,.36,1);
 }
 .nav .nav-links a:hover::after{ transform:scaleX(1); transform-origin:left; }
+.nav.is-stuck{
+  background:rgba(251,250,247,.8);
+  backdrop-filter:saturate(1.4) blur(16px);
+  -webkit-backdrop-filter:saturate(1.4) blur(16px);
+  box-shadow:0 1px 0 rgba(23,20,31,.07);
+}
+/* sobre el telón oscuro */
+.nav.nav--dark{
+  background:rgba(7,6,12,.42) !important;
+  box-shadow:0 1px 0 rgba(242,239,233,.07) !important;
+}
+.nav.nav--dark .nav-links a,
+.nav.nav--dark .nav-name,
+.nav.nav--dark .snd-toggle{ color:#F2EFE9; }
 
-/* ---------- 2. HERO v2 ----------------------------------- */
+/* ---------- 2. HERO ------------------------------------- */
 .hero-v2{
-  position:relative;
-  background:
-    radial-gradient(120% 80% at 50% 108%, rgba(155,48,217,.16) 0%, rgba(155,48,217,0) 58%),
-    radial-gradient(100% 70% at 12% 0%,  rgba(75,59,240,.13) 0%, rgba(75,59,240,0) 60%),
-    linear-gradient(180deg,#FBFAF7 0%, #F4F1EC 52%, #EFEBE4 100%);
-  overflow:clip;
+  position:relative; overflow:clip;
   padding:0 !important; margin:0 !important; width:100%; max-width:none !important;
+  background:
+    radial-gradient(120% 80% at 50% 108%, rgba(155,48,217,.15) 0%, rgba(155,48,217,0) 58%),
+    radial-gradient(100% 70% at 12% 0%,  rgba(75,59,240,.12) 0%, rgba(75,59,240,0) 60%),
+    linear-gradient(180deg,#FBFAF7 0%, #F4F1EC 52%, #EFEBE4 100%);
 }
 .hv-pin{
-  height:100svh; position:relative; display:grid; place-items:center; overflow:clip;
+  height:100svh; position:relative; overflow:clip;
   padding:0 !important; margin:0 !important; width:100%; max-width:none !important;
 }
-.hv-stage{
-  position:absolute; inset:0; display:grid; place-items:start center;
-  padding:0 !important; margin:0 !important;
-}
+.hv-stage{ position:absolute; inset:0; display:grid; place-items:start center; }
 
-/* estado de entrada — sólo si JS está vivo (la clase la pone find.js) */
-.hv-title .w,[data-hv-up]{ opacity:1; }
-.js-hv .hv-title .w{ opacity:0; transform:translate3d(0,.42em,0) rotate(1.4deg); }
-.js-hv [data-hv-up]{ opacity:0; transform:translate3d(0,18px,0); }
-.js-hv.hv-in .hv-title .w,
-.js-hv.hv-in [data-hv-up]{ opacity:1; transform:none; }
-
-/* --- copy --- */
+/* copy */
 .hv-copy{
   position:relative; z-index:3; text-align:center;
-  width:min(1180px, 92vw); padding-top:clamp(84px,11.5vh,138px);
+  width:min(1180px,92vw); padding-top:clamp(84px,11.5vh,138px);
   will-change:transform,opacity;
 }
 .hv-eyebrow{
   font-family:var(--mono,ui-monospace,monospace);
   font-size:clamp(.62rem,.74vw,.73rem); letter-spacing:.2em; text-transform:uppercase;
-  color:var(--ink-mute,#6b6577); margin:0 0 clamp(1rem,2.4vh,1.8rem);
+  color:var(--ink-mute,#716C7E); margin:0 0 clamp(1rem,2.4vh,1.8rem);
 }
 .hv-title{
   margin:0; color:var(--ink);
-  font-size:clamp(2.5rem, 6.3vw, 6.1rem);
-  line-height:.94; letter-spacing:-.042em; font-weight:760;
+  font-size:clamp(2.5rem,6.3vw,6.1rem);
+  line-height:.94; letter-spacing:-.042em; font-weight:700;
   text-wrap:balance;
 }
-.hv-title .w{ display:inline-block; will-change:transform,opacity; }
+.hv-title .w{ display:inline-block; }
 .hv-title .gr{
-  background:linear-gradient(96deg,var(--indigo) 0%, var(--violet) 62%, var(--lilac) 100%);
+  background:linear-gradient(96deg,var(--indigo) 0%,var(--violet) 62%,var(--lilac) 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .hv-sub{
@@ -91,23 +93,30 @@
   display:inline-flex; align-items:center; gap:.5rem;
   padding:.92rem 1.6rem; border-radius:999px; font-weight:600;
   font-size:.96rem; text-decoration:none; white-space:nowrap;
-  transition:transform .4s var(--ease-out,cubic-bezier(.22,1,.36,1)),
-             box-shadow .4s ease, background .3s ease, color .3s ease;
+  transition:transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s ease,
+             background .3s ease, color .3s ease, border-color .3s ease;
 }
 .hv-pill{ background:var(--ink); color:#FBFAF7; box-shadow:0 10px 26px rgba(23,20,31,.17); }
 .hv-pill:hover{ transform:translateY(-2px); box-shadow:0 16px 36px rgba(23,20,31,.24); }
-.hv-pill .ar{ transition:transform .4s var(--ease-out,cubic-bezier(.22,1,.36,1)); }
+.hv-pill .ar{ transition:transform .45s cubic-bezier(.22,1,.36,1); }
 .hv-pill:hover .ar{ transform:translateX(5px); }
 .hv-ghost{ border:1.5px solid rgba(23,20,31,.22); color:var(--ink); }
 .hv-ghost:hover{ border-color:var(--ink); transform:translateY(-2px); }
 
-/* --- visual que sube --- */
+/* entrada (la clase la pone find.js; sin JS todo se ve) */
+.js-hv .hv-title .w{ opacity:0; transform:translate3d(0,.42em,0) rotate(1.4deg); }
+.js-hv [data-hv-up]{ opacity:0; transform:translate3d(0,18px,0); }
+.js-hv.hv-in .hv-title .w,
+.js-hv.hv-in [data-hv-up]{ opacity:1; transform:none; }
+
+/* visual */
 .hv-visual{
   position:absolute; left:0; right:0; bottom:0; height:52%; z-index:2;
-  will-change:transform,opacity; transform-origin:50% 84%;
+  will-change:transform,opacity; transform-origin:50% 86%;
 }
 .hv-visual img{
   width:100%; height:100%; display:block; object-fit:cover; object-position:center 58%;
+  transform:scale(1.035);
   -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 100%);
           mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 100%);
 }
@@ -117,52 +126,101 @@
   .hv-title{ font-size:clamp(2.3rem,5.4vw,4.6rem); }
 }
 
-/* --- telón oscuro para que el wordmark resalte --- */
-.hv-dim{
-  position:absolute; inset:0; z-index:3; pointer-events:none;
-  background:radial-gradient(120% 90% at 50% 62%, #141021 0%, #09070F 100%);
-  opacity:0; will-change:opacity;
-}
-
-/* --- wordmark recortado sobre la imagen --- */
-.hv-mark{
-  position:absolute; inset:0; z-index:4; display:grid; place-items:center;
-  pointer-events:none; opacity:0; will-change:transform,opacity;
-}
-.hv-mark span{
-  font-size:clamp(5rem, 21vw, 21rem); font-weight:850; letter-spacing:-.05em;
-  line-height:.8;
-  background-image:var(--mark-img);
-  background-size:cover; background-position:center 62%;
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  -webkit-text-stroke:1px rgba(242,239,233,.2);
-  filter:saturate(1.15) contrast(1.08);
-}
-.hv-fade{
-  position:absolute; inset:0; z-index:5; pointer-events:none;
-  background:#F2EFE9; opacity:0; will-change:opacity;
-}
 .hv-scroll{
-  position:absolute; left:50%; bottom:1.6rem; translate:-50% 0; z-index:6;
-  font-family:var(--mono,monospace); font-size:.6rem; letter-spacing:.22em;
-  text-transform:uppercase; color:var(--ink-mute,#6b6577); opacity:.6;
+  position:absolute; left:50%; bottom:1.5rem; translate:-50% 0; z-index:3;
+  margin:0; font-family:var(--mono,monospace); font-size:.6rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink); opacity:.55;
 }
 .hv-scroll::after{
-  content:""; display:block; width:1px; height:22px; margin:.5rem auto 0;
+  content:""; display:block; width:1px; height:24px; margin:.55rem auto 0;
   background:currentColor; transform-origin:top;
   animation:hvTick 1.9s cubic-bezier(.65,0,.35,1) infinite;
 }
-@keyframes hvTick{ 0%{transform:scaleY(0)} 45%{transform:scaleY(1)} 100%{transform:scaleY(0); transform-origin:bottom} }
+@keyframes hvTick{ 0%{transform:scaleY(0)} 45%{transform:scaleY(1)} 100%{transform:scaleY(0);transform-origin:bottom} }
 
-/* ---------- 3. LOGOS DE CLIENTES A COLOR ----------------- */
+/* ---------- 3. TELÓN DE MARCA ---------------------------- */
+.hv-under{
+  position:absolute; inset:0; z-index:4; pointer-events:none;
+  background:#FBFAF7; opacity:0;
+}
+.hv-curtain{
+  position:absolute; inset:0; z-index:5; pointer-events:none; overflow:hidden;
+  background:#07060C;
+  clip-path:inset(100% 0 0 0);
+  visibility:hidden;
+}
+.hv-curtain.is-live{ visibility:visible; }
+.hv-brand{ position:absolute; inset:0; isolation:isolate; will-change:transform; }
+
+/* relleno vivo que se ve a través de las letras */
+.hv-fill{
+  position:absolute; inset:-9%; will-change:transform;
+  background:
+    radial-gradient(40% 60% at 22% 30%, #6C5CFF 0%, transparent 62%),
+    radial-gradient(45% 55% at 78% 22%, #C04BFF 0%, transparent 62%),
+    radial-gradient(50% 60% at 62% 82%, #FF7AB6 0%, transparent 60%),
+    linear-gradient(120deg,#4B3BF0,#9B30D9);
+}
+.hv-fill img{ width:100%; height:100%; object-fit:cover; display:block; transform:scale(1.04); }
+.hv-curtain.is-live .hv-fill img{ animation:hvDrift 12s ease-in-out infinite alternate; }
+@keyframes hvDrift{
+  from{ transform:scale(1.04) rotate(-1.2deg) translate3d(-1%,0,0); }
+  to  { transform:scale(1.13) rotate(1.6deg)  translate3d(1.5%,-1%,0); }
+}
+
+/* capa que "recorta": negro con letras blancas en multiply */
+.hv-knock,.hv-over{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:clamp(1.3rem,3.2vh,2.4rem);
+}
+.hv-knock{ background:#07060C; color:#fff; mix-blend-mode:multiply; }
+.hv-over{ z-index:2; }
+.hv-anchor{ position:relative; display:inline-block; will-change:transform; }
+.hv-word{
+  display:flex; white-space:nowrap;
+  font-family:"Space Grotesk",Inter,sans-serif; font-weight:700;
+  font-size:clamp(5.5rem,23vw,24rem); line-height:.84; letter-spacing:-.055em;
+}
+.hv-l{ display:inline-block; overflow:hidden; padding:.15em .02em .07em; margin:-.15em -.02em -.07em; }
+.hv-l > span{ display:inline-block; will-change:transform; }
+.hv-ghost{ visibility:hidden; }
+
+/* destello ✦ del logo */
+.hv-spark{
+  position:absolute; top:-.02em; right:-.34em;
+  width:.3em; height:.3em; font-size:clamp(5.5rem,23vw,24rem);
+  overflow:visible; will-change:transform,opacity;
+  filter:drop-shadow(0 0 .06em rgba(196,181,253,.9)) drop-shadow(0 0 .18em rgba(155,48,217,.6));
+}
+
+/* tagline */
+.hv-tag{
+  margin:0; display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  font-family:var(--mono,monospace); font-size:clamp(.64rem,.86vw,.8rem);
+  letter-spacing:.26em; text-transform:uppercase; color:rgba(242,239,233,.78);
+}
+.hv-tag span{ display:inline-block; will-change:transform,opacity; }
+.hv-tag span + span::before{ content:"✦"; color:#A78BFA; margin:0 1.05em; letter-spacing:0; }
+.hv-knock .hv-tag{ visibility:hidden; }
+
+/* línea láser que barre el borde del telón */
+.hv-edge{
+  position:absolute; inset:0; z-index:6; pointer-events:none; opacity:0;
+  will-change:transform,opacity;
+}
+.hv-edge::before{
+  content:""; position:absolute; left:0; right:0; top:-1px; height:2px;
+  background:linear-gradient(90deg,transparent 0%,#4B3BF0 18%,#C4B5FD 50%,#9B30D9 82%,transparent 100%);
+  box-shadow:0 0 16px 2px rgba(155,48,217,.6), 0 0 70px 10px rgba(75,59,240,.32);
+}
+
+/* ---------- 4. LOGOS DE CLIENTES A COLOR ----------------- */
 .clients{ background:var(--paper,#FBFAF7); }
 .clients-track img{
-  filter:none !important;
-  opacity:1 !important;
-  height:34px !important;
-  transition:transform .4s var(--ease-out,cubic-bezier(.22,1,.36,1));
+  filter:none !important; opacity:1 !important; height:34px !important;
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
 }
-.clients-marquee:hover .clients-track img{ opacity:.96 !important; }
 .clients-track img:hover{ transform:scale(1.07); }
 .clients-track .cl-word{
   flex:0 0 auto; margin-right:clamp(2.6rem,6vw,5rem);
@@ -177,23 +235,20 @@
   color:#8a7557; margin-top:3px;
 }
 
-/* ---------- 4. SERVICIOS EDITORIALES --------------------- */
+/* ---------- 5. SERVICIOS EDITORIALES --------------------- */
 .svc-v2{ background:#0C0A14; color:#F2EFE9; padding:0; }
 .svc-intro{
-  display:grid; grid-template-columns:minmax(120px,1fr) minmax(0,2.4fr);
-  gap:clamp(1rem,4vw,3rem); align-items:start;
+  display:grid; grid-template-columns:minmax(120px,.95fr) minmax(0,2.62fr);
+  gap:clamp(1rem,3vw,2.4rem); align-items:start;
   padding:clamp(5rem,13vh,9.5rem) var(--gutter,6vw) clamp(3rem,7vh,5rem);
   border-bottom:1px solid rgba(242,239,233,.11);
 }
-.svc-eyebrow{
-  margin:.6rem 0 0; font-size:.78rem; font-weight:650; letter-spacing:.01em; color:#F2EFE9;
-}
+.svc-eyebrow{ margin:.6rem 0 0; font-size:.78rem; font-weight:650; color:#F2EFE9; }
 .svc-h2{
   margin:0; font-size:clamp(2.2rem,5.6vw,5rem); line-height:1.02;
   letter-spacing:-.04em; font-weight:450; color:#F2EFE9;
 }
 .svc-h2 span{ color:rgba(242,239,233,.42); }
-
 .svc-row{
   display:grid; grid-template-columns:minmax(120px,.95fr) minmax(0,2fr) minmax(0,.62fr);
   gap:clamp(1rem,3vw,2.4rem); align-items:center;
@@ -205,8 +260,7 @@
 .svc-n{
   flex:0 0 auto; width:38px; height:38px; border-radius:50%;
   border:1px solid rgba(242,239,233,.42);
-  display:grid; place-items:center; font-size:.8rem; font-weight:600;
-  color:#F2EFE9;
+  display:grid; place-items:center; font-size:.8rem; font-weight:600; color:#F2EFE9;
 }
 .svc-copy{ max-width:34ch; }
 .svc-copy p{
@@ -220,7 +274,6 @@
   transition:border-color .3s ease, gap .3s ease;
 }
 .svc-copy a:hover{ border-color:#F2EFE9; gap:.75rem; }
-
 .svc-big{
   margin:0; font-size:clamp(3.2rem,11.5vw,11rem); line-height:.88;
   letter-spacing:-.045em; font-weight:300; color:rgba(242,239,233,.9);
@@ -229,7 +282,6 @@
 .svc-big .fill{
   position:absolute; inset:0; display:block; font-weight:300;
   background-image:linear-gradient(98deg,#8E7BFF 0%,#A86BF5 34%,#C26BE8 62%,#F0E6FF 100%);
-  background-size:140% 100%; background-position:0% 50%;
   -webkit-background-clip:text; background-clip:text; color:transparent;
   clip-path:inset(0 100% 0 0);
   transition:clip-path 1.2s cubic-bezier(.22,1,.36,1);
@@ -237,23 +289,16 @@
 }
 .svc-row.is-in .svc-big .fill{ clip-path:inset(0 0% 0 0); }
 .svc-big .base{ opacity:.17; }
-
-/* miniatura real a la derecha */
 .svc-shot{
   position:relative; aspect-ratio:4/3; border-radius:14px; overflow:hidden;
   background:#15121F; border:1px solid rgba(242,239,233,.1);
   opacity:0; transform:translate3d(0,26px,0) scale(.97);
-  transition:opacity .85s cubic-bezier(.22,1,.36,1) .12s,
-             transform .95s cubic-bezier(.22,1,.36,1) .12s;
+  transition:opacity .85s cubic-bezier(.22,1,.36,1) .12s, transform .95s cubic-bezier(.22,1,.36,1) .12s;
   box-shadow:0 22px 50px rgba(0,0,0,.45);
 }
 .svc-row.is-in .svc-shot{ opacity:1; transform:none; }
-.svc-shot img{
-  width:100%; height:100%; object-fit:cover; display:block;
-  transition:transform 1.1s cubic-bezier(.22,1,.36,1);
-}
+.svc-shot img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 1.1s cubic-bezier(.22,1,.36,1); }
 .svc-row:hover .svc-shot img{ transform:scale(1.05); }
-
 @media (max-width:1060px){
   .svc-row{ grid-template-columns:minmax(110px,1fr) minmax(0,2fr); }
   .svc-shot{ display:none; }
@@ -263,9 +308,23 @@
   .svc-big{ font-size:clamp(3rem,16vw,6rem); margin-top:1.4rem; }
 }
 
-/* ---------- 5. RESPETO A REDUCED MOTION ------------------ */
+/* ---------- 6. PREVIEW FLOTANTE EN PROYECTOS ------------- */
+.wk-float{ position:fixed; left:0; top:0; z-index:950; pointer-events:none; will-change:transform; }
+.wk-float-in{
+  width:clamp(250px,23vw,360px); aspect-ratio:16/10; border-radius:16px; overflow:hidden;
+  background:#15121F; translate:30px -50%;
+  opacity:0; transform:scale(.82) rotate(-4deg);
+  transition:opacity .32s ease, transform .55s cubic-bezier(.22,1,.36,1), translate .5s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 30px 70px rgba(23,20,31,.28), 0 0 0 1px rgba(23,20,31,.06);
+}
+.wk-float.flip .wk-float-in{ translate:calc(-100% - 30px) -50%; }
+.wk-float.on .wk-float-in{ opacity:1; transform:scale(1) rotate(0deg); }
+.wk-float img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+
+/* ---------- 7. REDUCED MOTION ---------------------------- */
 @media (prefers-reduced-motion:reduce){
-  .hv-mark,.hv-fade{ display:none; }
+  .hv-curtain,.hv-edge,.hv-under{ display:none; }
   .svc-big .fill{ clip-path:inset(0 0 0 0); transition:none; }
   .hv-scroll::after{ animation:none; }
+  .wk-float{ display:none; }
 }
