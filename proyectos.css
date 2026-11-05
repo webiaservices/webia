@@ -312,3 +312,43 @@ html.lenis{ scroll-behavior:auto !important; }
 .am-hb span{ height:10px; border-radius:5px; background:linear-gradient(90deg,#3B5BDB,#5C7CFA); }
 .am-hb.o span{ background:linear-gradient(90deg,#F59E0B,#FBBF24); }
 .am-hb b{ text-align:right; font-weight:700; }
+
+/* ---------- caso confidencial (sin pantallas) ---------- */
+.pj-nda{
+  position:relative; overflow:hidden; border-radius:18px; color:#F6EFE3;
+  min-height:min(64vh,560px); padding:clamp(1.8rem,3.6vw,3rem);
+  display:flex; flex-direction:column; justify-content:space-between; gap:1.6rem;
+  background:
+    radial-gradient(90% 70% at 85% 0%, rgba(201,160,110,.22) 0%, transparent 60%),
+    radial-gradient(70% 60% at 0% 100%, rgba(155,48,217,.16) 0%, transparent 60%),
+    #2B1D12;
+  box-shadow:0 0 0 1px rgba(23,20,31,.08), 0 40px 80px -30px rgba(43,29,18,.55), 0 18px 36px -18px rgba(23,20,31,.25);
+}
+.pj-nda-brand i{
+  display:block; font-family:Georgia,"Times New Roman",serif; font-style:italic; font-weight:600;
+  font-size:clamp(3rem,6.4vw,5.4rem); line-height:.95; letter-spacing:-.02em;
+}
+.pj-nda-brand u{
+  display:block; margin-top:.6rem; text-decoration:none; font-size:.72rem; letter-spacing:.34em;
+  text-transform:uppercase; color:#C9B08A;
+}
+.pj-nda-net{ position:relative; height:clamp(170px,26vh,240px); margin:0 4%; }
+.pj-nda-net svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.pj-nda-net line{ stroke:rgba(246,239,227,.35); stroke-width:1.2; stroke-dasharray:4 6; vector-effect:non-scaling-stroke; animation:ndaFlow 2.4s linear infinite; }
+@keyframes ndaFlow{ to{ stroke-dashoffset:-20; } }
+.pj-nda-net span{
+  position:absolute; translate:-50% -50%; white-space:nowrap;
+  font-size:.82rem; font-weight:600; padding:.5rem .9rem; border-radius:999px;
+  background:rgba(43,29,18,.9); border:1px solid rgba(246,239,227,.24);
+}
+.pj-nda-net span.core{
+  background:#F6EFE3; color:#2B1D12; border-color:#F6EFE3; padding:.65rem 1.1rem;
+  box-shadow:0 0 0 8px rgba(246,239,227,.08), 0 0 40px rgba(201,160,110,.35);
+}
+.pj-nda-lock{
+  display:flex; align-items:flex-start; gap:.6rem; margin:0; font-size:.86rem; line-height:1.45; color:#D9C9AE;
+  padding-top:1.1rem; border-top:1px solid rgba(246,239,227,.14);
+}
+.pj-nda-lock svg{ width:16px; height:16px; margin-top:.15em; flex:0 0 auto; fill:none; stroke:currentColor; stroke-width:2; }
+@media (max-width:960px){ .pj-nda{ min-height:0; } .pj-nda-net span{ font-size:.74rem; padding:.42rem .7rem; } }
+@media (prefers-reduced-motion:reduce){ .pj-nda-net line{ animation:none; } }
